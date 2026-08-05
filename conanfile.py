@@ -1,7 +1,6 @@
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
 
-
 class dialog_generatorRecipe(ConanFile):
     name = "dialog-generator"
     version = "0.1"
@@ -38,6 +37,10 @@ class dialog_generatorRecipe(ConanFile):
         cmake = CMake(self)
         cmake.install()
 
-    
+    def requirements(self):
+            self.requires('qt/5.15.19')
 
-    
+
+    def configure(self):
+        # Hier wird die Shared-Option für Qt gesetzt
+        self.options['qt'].shared = True
