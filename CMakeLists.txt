@@ -18,11 +18,20 @@ add_executable(${PROJECT_NAME}
     src/Parser.cpp
     src/Parser.h
     src/UiFile.h
+    src/Generator.cpp
+    src/Generator.h
+    src/DialogGenerator.cpp
+    src/DialogGenerator.h
+    src/FactoryGenerator.cpp
+    src/FactoryGenerator.h
+    src/PersistorGenerator.cpp
+    src/PersistorGenerator.h
+    src/DataProviderGenerator.cpp
+    src/DataProviderGenerator.h
     src/main.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
-#PRIVATE Qt5::QCocoaIntegrationPlugin
     Qt5::Core
     Qt5::Widgets
 )
