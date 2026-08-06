@@ -83,14 +83,8 @@ public:
      * Default implementation returns an empty list; concrete generators may
      * override to provide global keywords relevant to all templates.
      */
-    virtual QStringList globalKeywords() const { return { "$NAME$", "$DEBUG$", "$PROJECT$", "$PACKAGE$", "$BRIEF$", "$COPYRIGHT$"}; }
+    virtual QStringList globalKeywords() const { return { "$DEBUG$", "$PROJECT$", "$PACKAGE$", "$COPYRIGHT$"}; }
 
-    /**
-     * @brief Return a debug keyword value generator.
-     *
-     * The returned callable matches the value type of keywordValues entries
-     * used by concrete generators. It returns a QString when invoked.
-     */
     /**
      * @brief Return a debug keyword value generator.
      *
@@ -99,6 +93,36 @@ public:
      */
     virtual std::function<QString()> debug() const {
         return []() { return QStringLiteral("debug"); };
+    }
+
+    /**
+     * @brief Return a project keyword value generator.
+     *
+     * The returned callable matches the value type of keywordValues entries
+     * used by concrete generators. It returns a QString when invoked.
+     */
+    virtual std::function<QString()> project() const {
+        return [this]() { return settings_.project; };
+    }
+
+    /**
+     * @brief Return a package keyword value generator.
+     *
+     * The returned callable matches the value type of keywordValues entries
+     * used by concrete generators. It returns a QString when invoked.
+     */
+    virtual std::function<QString()> package() const {
+        return [this]() { return settings_.package; };
+    }
+
+    /**
+     * @brief Return a copyright keyword value generator.
+     *
+     * The returned callable matches the value type of keywordValues entries
+     * used by concrete generators. It returns a QString when invoked.
+     */
+    virtual std::function<QString()> copyright() const {
+        return [this]() { return settings_.copyright; };
     }
 
     /**

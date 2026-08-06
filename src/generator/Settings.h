@@ -26,6 +26,10 @@ struct Settings {
         QString Persistor = Template::PersistorGenerator; /**< Template content for Persistor generator (default from gens::DefaultTemplates) */
     } templates; /**< Instance holding all generator templates */
 
+    // Selected global keyword values used by templates.
+    QString project;   /**< Value used for $PROJECT$ */
+    QString package;   /**< Value used for $PACKAGE$ */
+    QString copyright; /**< Value used for $COPYRIGHT$ */
 };
 
 } // namespace dlgen::generator
