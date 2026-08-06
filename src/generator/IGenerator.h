@@ -5,6 +5,8 @@
 #include <QTextStream>
 #include <QDir>
 #include <QStringList>
+#include <QMap>
+#include <functional>
 #include "Settings.h"
 #include "UiFile.h"
 
@@ -82,6 +84,16 @@ public:
      * override to provide global keywords relevant to all templates.
      */
     virtual QStringList globalKeywords() const { return { "$NAME$", "$DEBUG$"}; }
+
+    /**
+     * @brief Return a debug keyword value generator.
+     *
+     * The returned callable matches the value type of keywordValues entries
+     * used by concrete generators. It returns a QString when invoked.
+     */
+    virtual std::function<QString()> debug() const {
+        return []() { return QStringLiteral("debug"); };
+    }
 
     /**
      * @brief Check that the provided template contains all required keywords.
