@@ -83,8 +83,14 @@ public:
      * Default implementation returns an empty list; concrete generators may
      * override to provide global keywords relevant to all templates.
      */
-    virtual QStringList globalKeywords() const { return { "$NAME$", "$DEBUG$"}; }
+    virtual QStringList globalKeywords() const { return { "$NAME$", "$DEBUG$", "$PROJECT$", "$PACKAGE$", "$BRIEF$", "$COPYRIGHT$"}; }
 
+    /**
+     * @brief Return a debug keyword value generator.
+     *
+     * The returned callable matches the value type of keywordValues entries
+     * used by concrete generators. It returns a QString when invoked.
+     */
     /**
      * @brief Return a debug keyword value generator.
      *

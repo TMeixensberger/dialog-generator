@@ -25,6 +25,7 @@ struct Settings {
         QString DataProvider = Template::DataProviderGenerator; /**< Template content for DataProvider generator (default from gens::DefaultTemplates) */
         QString Persistor = Template::PersistorGenerator; /**< Template content for Persistor generator (default from gens::DefaultTemplates) */
     } templates; /**< Instance holding all generator templates */
+
 };
 
 } // namespace dlgen::generator
