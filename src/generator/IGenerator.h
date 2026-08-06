@@ -136,7 +136,7 @@ public:
      * map.
      */
     virtual KeywordValues keywordValues() const 
-    {
+    { 
         KeywordValues values;
         values.insert("$DEBUG$", debug());
         values.insert("$PROJECT$", project());
