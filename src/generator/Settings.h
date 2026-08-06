@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QString>
+#include "gens/DefaultTemplates.h"
 
 namespace dlgen::generator {
 
@@ -17,7 +18,6 @@ struct Settings {
      *
      * Nested struct grouping template strings used by individual generators.
      */
-#include "gens/DefaultTemplates.h"
 
     struct Templates {
         QString Dialog = Template::DialogGenerator; /**< Template content for Dialog generator (default from gens::DefaultTemplates) */
