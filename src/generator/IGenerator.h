@@ -26,14 +26,14 @@ public:
      * @param s Settings to apply
      * @return reference to *this for chaining
      */
-    virtual IGenerator &applySettings(const Settings &s) = 0;
+    virtual IGenerator &applySettings(const Settings &s) { settings_ = s; return *this; }
 
     /**
      * @brief Set the target path (directory or file) where files will be generated.
      * @param path Target directory or file path
      * @return reference to *this for chaining
      */
-    virtual IGenerator &setTargetPath(const QString &path) = 0;
+    virtual IGenerator &setTargetPath(const QString &path) { targetPath_ = path; return *this; }
 
     /**
      * @brief Return the target file name for this generator.
@@ -51,7 +51,7 @@ public:
      * via setTargetPath(). This is used by the provided helper to compute
      * the final path when writing files.
      */
-    virtual QString getTargetPath() const = 0;
+    virtual QString getTargetPath() const { return targetPath_; }
 
     /**
      * @brief Convenience helper to write provided content into the configured target file.
@@ -96,6 +96,27 @@ public:
     }
 
     /**
+     * @brief Replace keywords in a template using the provided value generators.
+     *
+     * For each entry in `keywordValues` the key is searched in `templ` and
+     * replaced with the QString produced by invoking the corresponding callable.
+     * Returns the resulting filled template.
+     */
+    QString fillTemplate(const QString &templ, const QMap<QString, std::function<QString()>> &keywordValues) const {
+        QString result = templ;
+        for (auto it = keywordValues.constBegin(); it != keywordValues.constEnd(); ++it) {
+            const QString &key = it.key();
+            const std::function<QString()> &producer = it.value();
+            QString val;
+            if (producer) {
+                val = producer();
+            }
+            result.replace(key, val);
+        }
+        return result;
+    }
+
+    /**
      * @brief Check that the provided template contains all required keywords.
      *        The check also includes any global keywords returned by globalKeywords().
      * @param required list of keywords that must be present in the template
@@ -120,6 +141,10 @@ public:
      * @return true on success, false on failure
      */
     virtual bool generate(const ::dlgen::core::UiFile &uiFile) = 0;
+
+protected:
+    Settings settings_;
+    QString targetPath_;
 };
 
 } // namespace dlgen::generator

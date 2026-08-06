@@ -1,4 +1,5 @@
 #include "DialogGenerator.h"
+#include <functional>
 
 namespace dlgen::generator {
 
@@ -13,6 +14,7 @@ bool DialogGenerator::generate(const ::dlgen::core::UiFile &uiFile) {
         return false; // missing required keywords (none defined -> will pass)
     }
 
+    QMap<QString, std::function<QString()>> keywordValues;
     (void)uiFile; // suppress unused parameter warning
     return false;
 }
