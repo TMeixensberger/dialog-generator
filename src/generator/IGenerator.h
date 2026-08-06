@@ -86,7 +86,7 @@ public:
      * Default implementation returns an empty list; concrete generators may
      * override to provide global keywords relevant to all templates.
      */
-    virtual QStringList globalKeywords() const { return { "$DEBUG$", "$PROJECT$", "$PACKAGE$", "$COPYRIGHT$"}; }
+    virtual QStringList globalKeywords() const { return keywordValues().keys(); }
 
     /**
      * @brief Return a debug keyword value generator.
@@ -135,7 +135,15 @@ public:
      * keyword replacement values. The default implementation returns an empty
      * map.
      */
-    virtual KeywordValues keywordValues() const { return {}; }
+    virtual KeywordValues keywordValues() const 
+    {
+        KeywordValues values;
+        values.insert("$DEBUG$", debug());
+        values.insert("$PROJECT$", project());
+        values.insert("$PACKAGE$", package());
+        values.insert("$COPYRIGHT$", copyright());
+        return values;
+    } 
 
     /**
      * @brief Replace keywords in a template using the provided value generators.

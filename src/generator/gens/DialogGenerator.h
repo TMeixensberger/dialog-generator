@@ -18,7 +18,7 @@ public:
 
     bool generate(const ::dlgen::core::UiFile &uiFile) override;
 
-    KeywordValues keywordValues() const override { return {}; }
+    KeywordValues keywordValues() const override;
 
     QString targetFile() const override { return QStringLiteral("DialogGenerator"); }
 
