@@ -9,6 +9,7 @@
 #include <functional>
 
 #include "Parser.h"
+#include "Generator.h"
 #include "ui_MainWindow.h"
 
 namespace {
@@ -57,7 +58,12 @@ public:
                 // Print the parsed UI file using the private helper in the
                 // anonymous namespace.
                 //printUiFile(uiFile);
+                dlgen::generator::Generator generator;
+                generator.applySettings(dlgen::generator::Settings());
+                generator.setTargetPath(QStringLiteral("./output"));
 
+                generator.generate(uiFile);
+                
                 // Also demonstrate the lambda-style visitor that loops over the
                 // named children and prints each entry (no duplicates by name).
                 uiFile.forEachNamedChild([](const QString &cls, const QString &name){

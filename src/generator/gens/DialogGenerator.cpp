@@ -1,5 +1,6 @@
 #include "DialogGenerator.h"
 #include <functional>
+#include <iostream>
 
 namespace dlgen::generator {
 
@@ -7,7 +8,7 @@ bool DialogGenerator::generate(const ::dlgen::core::UiFile &uiFile) {
     // TODO: implement dialog-specific generation logic
 
     // define an empty keyword list for template validation
-    QStringList requiredKeywords = { "$DIALOG$" }; // empty list
+    QStringList requiredKeywords = { "$NAMESPACE$", "$NAME$", "$ROLES$", "$WIDGETS$" }; // empty list
 
     // validate the configured template for this generator
     if (!checkTemplate(requiredKeywords, settings_.templates.Dialog)) {
@@ -15,8 +16,15 @@ bool DialogGenerator::generate(const ::dlgen::core::UiFile &uiFile) {
     }
 
     QMap<QString, std::function<QString()>> keywordValues;
-    (void)uiFile; // suppress unused parameter warning
-    return false;
+
+    keywordValues.insert("$DEBUG$", debug());
+    
+    auto generated = fillTemplate(settings_.templates.Dialog, keywordValues);
+    
+    std::cout << "Generated content:\n" << generated.toStdString() << std::endl;
+    //toFile(generated);
+
+    return true;
 }
 
 } // namespace dlgen::generator

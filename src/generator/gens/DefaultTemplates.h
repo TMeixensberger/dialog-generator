@@ -13,8 +13,7 @@ namespace dlgen::generator {
  */
 class Template {
 public:
-    inline static const QString DialogGenerator = QStringLiteral(R"(
-$DEBUG$
+    inline static const QString DialogGenerator = QStringLiteral(R"($DEBUG$
 /**
  * @file
  * @par Project: $PROJECT$
