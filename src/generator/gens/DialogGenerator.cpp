@@ -15,11 +15,11 @@ bool DialogGenerator::generate(const ::dlgen::core::UiFile &uiFile) {
         return false; // missing required keywords (none defined -> will pass)
     }
 
-    QMap<QString, std::function<QString()>> keywordValues;
+    KeywordValues values;
 
-    keywordValues.insert("$DEBUG$", debug());
+    values.insert("$DEBUG$", debug());
     
-    auto generated = fillTemplate(settings_.templates.Dialog, keywordValues);
+    auto generated = fillTemplate(settings_.templates.Dialog, values);
     
     std::cout << "Generated content:\n" << generated.toStdString() << std::endl;
     //toFile(generated);

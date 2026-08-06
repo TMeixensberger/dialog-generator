@@ -17,6 +17,8 @@ public:
 
     bool generate(const ::dlgen::core::UiFile &uiFile) override;
 
+    KeywordValues keywordValues() const override { return {}; }
+
     QString targetFile() const override { return QStringLiteral("PersistorGenerator"); }
 
 private:

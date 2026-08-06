@@ -19,6 +19,9 @@ namespace dlgen::generator {
  */
 class IGenerator {
 public:
+    using KeywordValueGenerator = std::function<QString()>;
+    using KeywordValues = QMap<QString, KeywordValueGenerator>;
+
     virtual ~IGenerator() = default;
 
     /**
@@ -126,17 +129,26 @@ public:
     }
 
     /**
+     * @brief Return the set of keyword value generators for this generator.
+     *
+     * Concrete generators may override this to provide generator-specific
+     * keyword replacement values. The default implementation returns an empty
+     * map.
+     */
+    virtual KeywordValues keywordValues() const { return {}; }
+
+    /**
      * @brief Replace keywords in a template using the provided value generators.
      *
      * For each entry in `keywordValues` the key is searched in `templ` and
      * replaced with the QString produced by invoking the corresponding callable.
      * Returns the resulting filled template.
      */
-    QString fillTemplate(const QString &templ, const QMap<QString, std::function<QString()>> &keywordValues) const {
+    QString fillTemplate(const QString &templ, const KeywordValues &keywordValues) const {
         QString result = templ;
         for (auto it = keywordValues.constBegin(); it != keywordValues.constEnd(); ++it) {
             const QString &key = it.key();
-            const std::function<QString()> &producer = it.value();
+            const KeywordValueGenerator &producer = it.value();
             QString val;
             if (producer) {
                 val = producer();
