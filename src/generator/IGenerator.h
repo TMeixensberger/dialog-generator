@@ -76,13 +76,27 @@ public:
     }
 
     /**
+     * @brief Return a list of global keywords that should always be present in templates.
+     *
+     * Default implementation returns an empty list; concrete generators may
+     * override to provide global keywords relevant to all templates.
+     */
+    virtual QStringList globalKeywords() const { return { "$NAME$", "$DEBUG$"}; }
+
+    /**
      * @brief Check that the provided template contains all required keywords.
+     *        The check also includes any global keywords returned by globalKeywords().
      * @param required list of keywords that must be present in the template
      * @param templ the template string to check
      * @return true if all keywords are present, false otherwise
      */
     bool checkTemplate(const QStringList &required, const QString &templ) const {
-        for (const QString &kw : required) {
+        QStringList all = required;
+        const QStringList globals = globalKeywords();
+        for (const QString &gk : globals) {
+            if (!all.contains(gk)) all.append(gk);
+        }
+        for (const QString &kw : all) {
             if (!templ.contains(kw)) return false;
         }
         return true;
