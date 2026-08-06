@@ -9,9 +9,16 @@
 #include <QFileInfo>
 #include <QDir>
 #include <iostream>
-#include <vector>
 
 using namespace dlgen::generator;
+
+Generator::Generator() {
+    // prefill with the available concrete generators
+    gens_.emplace_back(std::make_unique<DialogGenerator>());
+    gens_.emplace_back(std::make_unique<FactoryGenerator>());
+    gens_.emplace_back(std::make_unique<PersistorGenerator>());
+    gens_.emplace_back(std::make_unique<DataProviderGenerator>());
+}
 
 bool Generator::generate(const ::dlgen::core::UiFile &uiFile) {
     // targetPath_ must be set
@@ -26,20 +33,9 @@ bool Generator::generate(const ::dlgen::core::UiFile &uiFile) {
         if (!QDir().mkpath(targetPath_)) return false;
     }
 
-    // Create a list of IGenerator instances and populate with all available generators
-    DialogGenerator dlg;
-    FactoryGenerator factory;
-    PersistorGenerator persistor;
-    DataProviderGenerator dataProvider;
-
-    std::vector<IGenerator*> gens;
-    gens.push_back(&dlg);
-    gens.push_back(&factory);
-    gens.push_back(&persistor);
-    gens.push_back(&dataProvider);
-
     // Loop over each generator, apply settings, set target path and invoke generate
-    for (IGenerator *g : gens) {
+    for (const auto &gptr : gens_) {
+        IGenerator *g = gptr.get();
         if (!g) continue;
         g->applySettings(settings_).setTargetPath(targetPath_);
         bool ok = g->generate(uiFile);

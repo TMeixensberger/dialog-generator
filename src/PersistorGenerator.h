@@ -37,6 +37,9 @@ public:
      */
     bool generate(const ::dlgen::core::UiFile &uiFile) override;
 
+    QString targetFile() const override { return QStringLiteral("PersistorGenerator"); }
+    QString getTargetPath() const override { return targetPath_; }
+
 private:
     Settings settings_;
     QString targetPath_;

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QString>
+#include <vector>
+#include <memory>
 
 #include "UiFile.h"
 #include "Settings.h"
@@ -19,7 +21,7 @@ namespace dlgen::generator {
  */
 class Generator : public IGenerator {
 public:
-    Generator() = default;
+    Generator();
 
     /**
      * @brief Apply generator settings using a builder-style call.
@@ -42,6 +44,13 @@ public:
     Generator &setTargetPath(const QString &path) override { targetPath_ = path; return *this; }
 
     /**
+     * @brief Add a generator instance. Generator takes ownership of the pointer.
+     * @param g raw pointer to an IGenerator implementation (ownership transferred)
+     * @return reference to *this for chaining
+     */
+    Generator &add(IGenerator *g) { gens_.emplace_back(g); return *this; }
+
+    /**
      * @brief Generate output for the provided uiFile using the previously set target path.
      *
      * The target path must have been set via setTargetPath() prior to calling
@@ -51,6 +60,16 @@ public:
      * @return true on success, false on failure
      */
     bool generate(const ::dlgen::core::UiFile &uiFile) override;
+
+    /**
+     * @brief Return a default target filename for the base Generator.
+     */
+    QString targetFile() const override { return QStringLiteral("Generator"); }
+
+    /**
+     * @brief Accessor for the configured target path.
+     */
+    QString getTargetPath() const override { return targetPath_; }
 
     /**
      * @brief Builder DSL for constructing a configured Generator in a fluent style.
@@ -82,6 +101,7 @@ public:
 private:
     Settings settings_;
     QString targetPath_;
+    std::vector<std::unique_ptr<IGenerator>> gens_;
 };
 
 } // namespace dlgen::generator
