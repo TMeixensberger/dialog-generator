@@ -17,11 +17,13 @@ struct Settings {
      *
      * Nested struct grouping template strings used by individual generators.
      */
+#include "gens/DefaultTemplates.h"
+
     struct Templates {
-        QString Dialog = QString(); /**< Template content for Dialog generator (empty by default) */
-        QString Factory = QString(); /**< Template content for Factory generator (empty by default) */
-        QString DataProvider = QString(); /**< Template content for DataProvider generator (empty by default) */
-        QString Persistor = QString(); /**< Template content for Persistor generator (empty by default) */
+        QString Dialog = Template::DialogGenerator; /**< Template content for Dialog generator (default from gens::DefaultTemplates) */
+        QString Factory = Template::FactoryGenerator; /**< Template content for Factory generator (default from gens::DefaultTemplates) */
+        QString DataProvider = Template::DataProviderGenerator; /**< Template content for DataProvider generator (default from gens::DefaultTemplates) */
+        QString Persistor = Template::PersistorGenerator; /**< Template content for Persistor generator (default from gens::DefaultTemplates) */
     } templates; /**< Instance holding all generator templates */
 };
 
