@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.15)
 # UI executable (links against the generator library)
 set(UI_SOURCES
     main.cpp
+    MainWindow.cpp
+    MainWindow.h
 )
 
 set(UI_FILES
