@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 set(CORE_SOURCES
+    Project.cpp
     ProjectFile.cpp
 )
 
