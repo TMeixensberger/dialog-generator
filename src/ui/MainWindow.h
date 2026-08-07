@@ -17,6 +17,7 @@ private:
     void addUiFile();
     void loadProject();
     void createProject();
+    void saveProject();
 
     Ui::MainWindow ui;
     std::unique_ptr<dlgen::core::ProjectFile> projectFile_;

@@ -98,6 +98,7 @@
     </property>
     <addaction name="actionLoadProject"/>
     <addaction name="actionCreateProject"/>
+    <addaction name="actionSaveProject"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -111,6 +112,11 @@
  <action name="actionCreateProject">
   <property name="text">
    <string>&amp;Create Project</string>
+  </property>
+ </action>
+ <action name="actionSaveProject">
+  <property name="text">
+   <string>&amp;Save Project</string>
   </property>
  </action>
  <resources/>

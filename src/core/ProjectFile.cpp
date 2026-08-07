@@ -5,8 +5,42 @@
 #include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QSaveFile>
 
 namespace dlgen::core {
+
+namespace {
+
+bool writeJsonObject(const QString &filePath, const QJsonObject &jsonObject, QString *errorString) {
+    QSaveFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly)) {
+        if (errorString != nullptr) {
+            *errorString = QStringLiteral("failed to open '%1' for writing").arg(filePath);
+        }
+        return false;
+    }
+
+    const QByteArray jsonBytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Indented);
+    const qint64 bytesWritten = file.write(jsonBytes);
+    if (bytesWritten != static_cast<qint64>(jsonBytes.size())) {
+        if (errorString != nullptr) {
+            *errorString = QStringLiteral("failed to write '%1'").arg(filePath);
+        }
+        file.cancelWriting();
+        return false;
+    }
+
+    if (!file.commit()) {
+        if (errorString != nullptr) {
+            *errorString = QStringLiteral("failed to commit '%1'").arg(filePath);
+        }
+        return false;
+    }
+
+    return true;
+}
+
+} // namespace
 
 ProjectFile::ProjectFile(const QString &projectDirectory)
     : projectDirectory_(QDir(projectDirectory).absolutePath()),
@@ -48,6 +82,11 @@ bool ProjectFile::reload() {
     }
 
     return true;
+}
+
+bool ProjectFile::save() {
+    errorString_.clear();
+    return writeJsonObject(configFilePath_, config_, &errorString_);
 }
 
 bool ProjectFile::isValid() const {
