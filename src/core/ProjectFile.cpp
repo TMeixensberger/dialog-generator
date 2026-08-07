@@ -91,6 +91,10 @@ bool ProjectFile::save() {
     return writeJsonObject(configFilePath_, config_, &errorString_);
 }
 
+void ProjectFile::loadUiFile(const UiFile &uiFile, const Settings &settings) {
+    projectData_.append(Data(uiFile, settings));
+}
+
 bool ProjectFile::isValid() const {
     return errorString_.isEmpty();
 }

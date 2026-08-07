@@ -32,4 +32,13 @@ struct Settings {
     QString dialogNamespace = "NAMESPACE"; /**< Value used for $NAMESPACE$ */
 };
 
+/**
+ * @brief Reads and writes Settings to disk.
+ */
+class SettingsStorage {
+public:
+    static bool read(const QString &filePath, Settings *settings, QString *errorString);
+    static bool write(const QString &filePath, const Settings &settings, QString *errorString);
+};
+
 } // namespace dlgen::core
