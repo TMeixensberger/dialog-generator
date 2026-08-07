@@ -32,10 +32,6 @@ bool IGenerator::toFile(const QString &content, const QString &filename) {
     return true;
 }
 
-QStringList IGenerator::globalKeywords() const {
-    return keywordValues().keys();
-}
-
 IGenerator::KeywordValues IGenerator::keywordValues() const {
     KeywordValues values;
     values.insert("$DEBUG$", []() { return QStringLiteral("debug"); });
@@ -61,7 +57,7 @@ QString IGenerator::fillTemplate(const QString &templ, const KeywordValues &keyw
 
 bool IGenerator::checkTemplate(const QStringList &required, const QString &templ) const {
     QStringList all = required;
-    const QStringList globals = globalKeywords();
+    const QStringList globals = keywordValues().keys();
     for (const QString &gk : globals) {
         if (!all.contains(gk)) all.append(gk);
     }
