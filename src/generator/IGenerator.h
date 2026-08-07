@@ -82,15 +82,23 @@ public:
      * @return true if all keywords are present, false otherwise
      */
     bool checkTemplate(const QStringList &required, const QString &templ) const;
-
+ 
     /**
      * @brief Perform generation for the provided parsed UiFile.
      * @param uiFile Parsed UI file to generate from
      * @return true on success, false on failure
      */
     virtual bool generate(const ::dlgen::core::UiFile &uiFile) = 0;
-
+ 
 protected:
+    /**
+     * @brief Format debug metadata as a comment block.
+     *
+     * This helper is used by concrete generators to generate a debug
+     * information comment block from the current keyword values.
+     */
+    QString formatDebugComment(const KeywordValues &vals) const;
+ 
     Settings settings_;
     QString targetPath_;
 };

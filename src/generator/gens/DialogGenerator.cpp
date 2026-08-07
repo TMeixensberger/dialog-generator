@@ -23,20 +23,10 @@ DialogGenerator::KeywordValues DialogGenerator::keywordValues() const {
 
     values.insert("$NAME$", settings_.name);
     values.insert("$NAMESPACE$", settings_.dialogNamespace);
-    values.insert("$ROLES$", QStringLiteral(""));
-    values.insert("$WIDGETS$", QStringLiteral(""));
+    values.insert("$ROLES$", QStringLiteral("ROLES123"));
+    values.insert("$WIDGETS$", QStringLiteral("WIDGETS123"));
 
-    auto debugValue = [](const KeywordValues &vals) {
-        QStringList lines;
-        lines.append(QStringLiteral("/*"));
-        for (auto it = vals.constBegin(); it != vals.constEnd(); ++it) {
-            lines.append(QStringLiteral(" * %1: %2").arg(it.key(), it.value()));
-        }
-        lines.append(QStringLiteral(" */"));
-        return lines.join(QLatin1Char('\n'));
-    }(values);
-
-    values.insert("$DEBUG$", debugValue);
+    values.insert("$DEBUG$", formatDebugComment(values));
 
     return values;
 } 

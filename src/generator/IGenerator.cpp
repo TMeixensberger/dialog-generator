@@ -34,7 +34,6 @@ bool IGenerator::toFile(const QString &content, const QString &filename) {
 
 IGenerator::KeywordValues IGenerator::keywordValues() const {
     KeywordValues values;
-    values.insert("$DEBUG$", QStringLiteral("debug"));
     values.insert("$PROJECT$", settings_.project);
     values.insert("$PACKAGE$", settings_.package);
     values.insert("$COPYRIGHT$", settings_.copyright);
@@ -48,7 +47,23 @@ QString IGenerator::fillTemplate(const QString &templ, const KeywordValues &keyw
     }
     return result;
 }
-
+ 
+QString IGenerator::formatDebugComment(const KeywordValues &vals) const {
+    QStringList lines;
+    lines.append(QStringLiteral("/*"));
+    lines.append(QStringLiteral(" * WARNING: The following code is generated and contains debug information."));
+    lines.append(QStringLiteral(" *"));
+    for (const QString &key : vals.keys()) {
+        QString cleanKey = key;
+        if (cleanKey.startsWith(QLatin1Char('$')) && cleanKey.endsWith(QLatin1Char('$')) && cleanKey.size() > 2) {
+            cleanKey = cleanKey.mid(1, cleanKey.size() - 2);
+        }
+        lines.append(QStringLiteral(" * %1: %2").arg(cleanKey, vals.value(key)));
+    }
+    lines.append(QStringLiteral(" */"));
+    return lines.join(QLatin1Char('\n'));
+}
+ 
 bool IGenerator::checkTemplate(const QStringList &required, const QString &templ) const {
     QStringList all = required;
     const QStringList globals = keywordValues().keys();
