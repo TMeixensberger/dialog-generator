@@ -26,9 +26,9 @@ KeywordValues DialogGenerator::keywordValues() const {
     KeywordValues values = IGenerator::keywordValues();
     
     values.insert("$NAME$", [this]() { return settings_.name; });
-    values.insert("$NAMESPACE$", debug());
-    values.insert("$ROLES$", debug());
-    values.insert("$WIDGETS$", debug());
+    values.insert("$NAMESPACE$", [this]() { return settings_.dialogNamespace; });
+    values.insert("$ROLES$", [this]() { return ""; });
+    values.insert("$WIDGETS$", [this]() { return ""; });
     return values;
 } 
 } // namespace dlgen::generator
