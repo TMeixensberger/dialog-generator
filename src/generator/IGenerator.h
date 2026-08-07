@@ -6,7 +6,6 @@
 #include <QDir>
 #include <QStringList>
 #include <QMap>
-#include <functional>
 #include "Settings.h"
 #include "UiFile.h"
 
@@ -19,8 +18,7 @@ namespace dlgen::generator {
  */
 class IGenerator {
 public:
-    using KeywordValueGenerator = std::function<QString()>;
-    using KeywordValues = QMap<QString, KeywordValueGenerator>;
+    using KeywordValues = QMap<QString, QString>;
 
     virtual ~IGenerator() = default;
 
@@ -70,11 +68,10 @@ public:
     virtual KeywordValues keywordValues() const;
 
     /**
-     * @brief Replace keywords in a template using the provided value generators.
+     * @brief Replace keywords in a template using the provided keyword values.
      *
      * For each entry in `keywordValues` the key is searched in `templ` and
-     * replaced with the QString produced by invoking the corresponding callable.
-     * Returns the resulting filled template.
+     * replaced with the corresponding QString value. Returns the filled result.
      */
     QString fillTemplate(const QString &templ, const KeywordValues &keywordValues) const;
 

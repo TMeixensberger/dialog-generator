@@ -1,9 +1,5 @@
 #include "DialogGenerator.h"
-#include <functional>
 #include <iostream>
-
-using KeywordValueGenerator = std::function<QString()>;
-using KeywordValues = QMap<QString, KeywordValueGenerator>;
 
 namespace dlgen::generator {
 
@@ -17,18 +13,19 @@ bool DialogGenerator::generate(const ::dlgen::core::UiFile &uiFile) {
     auto generated = fillTemplate(settings_.templates.Dialog, keywordValues());
     
     std::cout << "Generated content:\n" << generated.toStdString() << std::endl;
-    //toFile(generated);
+    //toFile(generated, "DialogGenerator.txt");
 
     return true;
 }
 
 KeywordValues DialogGenerator::keywordValues() const {
     KeywordValues values = IGenerator::keywordValues();
-    
-    values.insert("$NAME$", [this]() { return settings_.name; });
-    values.insert("$NAMESPACE$", [this]() { return settings_.dialogNamespace; });
-    values.insert("$ROLES$", [this]() { return ""; });
-    values.insert("$WIDGETS$", [this]() { return ""; });
+
+    values.insert("$NAME$", settings_.name);
+    values.insert("$NAMESPACE$", settings_.dialogNamespace);
+    values.insert("$ROLES$", QStringLiteral(""));
+    values.insert("$WIDGETS$", QStringLiteral(""));
+
     return values;
 } 
 } // namespace dlgen::generator

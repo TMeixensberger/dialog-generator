@@ -34,23 +34,17 @@ bool IGenerator::toFile(const QString &content, const QString &filename) {
 
 IGenerator::KeywordValues IGenerator::keywordValues() const {
     KeywordValues values;
-    values.insert("$DEBUG$", []() { return QStringLiteral("debug"); });
-    values.insert("$PROJECT$", [this]() { return settings_.project; });
-    values.insert("$PACKAGE$", [this]() { return settings_.package; });
-    values.insert("$COPYRIGHT$", [this]() { return settings_.copyright; });
+    values.insert("$DEBUG$", QStringLiteral("debug"));
+    values.insert("$PROJECT$", settings_.project);
+    values.insert("$PACKAGE$", settings_.package);
+    values.insert("$COPYRIGHT$", settings_.copyright);
     return values;
 }
 
 QString IGenerator::fillTemplate(const QString &templ, const KeywordValues &keywordValues) const {
     QString result = templ;
     for (auto it = keywordValues.constBegin(); it != keywordValues.constEnd(); ++it) {
-        const QString &key = it.key();
-        const KeywordValueGenerator &producer = it.value();
-        QString val;
-        if (producer) {
-            val = producer();
-        }
-        result.replace(key, val);
+        result.replace(it.key(), it.value());
     }
     return result;
 }
