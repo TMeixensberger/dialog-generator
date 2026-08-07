@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.15)
 # Generator library (parsing + generation logic)
 set(GENERATOR_SOURCES
     Parser.cpp
+    IGenerator.cpp
     Generator.cpp
     gens/DialogGenerator.cpp
     gens/FactoryGenerator.cpp

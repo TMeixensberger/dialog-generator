@@ -29,14 +29,14 @@ public:
      * @param s Settings to apply
      * @return reference to *this for chaining
      */
-    virtual IGenerator &applySettings(const Settings &s) { settings_ = s; return *this; }
+    virtual IGenerator &applySettings(const Settings &s);
 
     /**
      * @brief Set the target path (directory or file) where files will be generated.
      * @param path Target directory or file path
      * @return reference to *this for chaining
      */
-    virtual IGenerator &setTargetPath(const QString &path) { targetPath_ = path; return *this; }
+    virtual IGenerator &setTargetPath(const QString &path);
 
     /**
      * @brief Return the currently configured target path.
@@ -45,7 +45,7 @@ public:
      * via setTargetPath(). This is used by the provided helper to compute
      * the full output path when writing files.
      */
-    virtual QString getTargetPath() const { return targetPath_; }
+    virtual QString getTargetPath() const;
 
     /**
      * @brief Convenience helper to write provided content into a file under the configured target path.
@@ -58,19 +58,7 @@ public:
      * @param filename Name of the file to write inside the configured target path
      * @return true if the file was written successfully, false otherwise
      */
-    bool toFile(const QString &content, const QString &filename) {
-        QString path = getTargetPath();
-        if (path.isEmpty()) return false;
-        if (filename.isEmpty()) return false;
-        QDir dir(path);
-        QString full = dir.filePath(filename);
-        QFile f(full);
-        if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) return false;
-        QTextStream out(&f);
-        out << content;
-        f.close();
-        return true;
-    }
+    bool toFile(const QString &content, const QString &filename);
 
     /**
      * @brief Return a list of global keywords that should always be present in templates.
@@ -78,14 +66,8 @@ public:
      * Default implementation returns an empty list; concrete generators may
      * override to provide global keywords relevant to all templates.
      */
-    virtual QStringList globalKeywords() const { return keywordValues().keys(); }
+    virtual QStringList globalKeywords() const;
 
-    /**
-     * @brief Return a debug keyword value generator.
-     *
-     * The returned callable matches the value type of keywordValues entries
-     * used by concrete generators. It returns a QString when invoked.
-     */
     /**
      * @brief Return the set of keyword value generators for this generator.
      *
@@ -93,14 +75,7 @@ public:
      * keyword replacement values. The default implementation returns a set of
      * globally supported keyword generators.
      */
-    virtual KeywordValues keywordValues() const {
-        KeywordValues values;
-        values.insert("$DEBUG$", []() { return QStringLiteral("debug"); });
-        values.insert("$PROJECT$", [this]() { return settings_.project; });
-        values.insert("$PACKAGE$", [this]() { return settings_.package; });
-        values.insert("$COPYRIGHT$", [this]() { return settings_.copyright; });
-        return values;
-    }
+    virtual KeywordValues keywordValues() const;
 
     /**
      * @brief Replace keywords in a template using the provided value generators.
@@ -109,19 +84,7 @@ public:
      * replaced with the QString produced by invoking the corresponding callable.
      * Returns the resulting filled template.
      */
-    QString fillTemplate(const QString &templ, const KeywordValues &keywordValues) const {
-        QString result = templ;
-        for (auto it = keywordValues.constBegin(); it != keywordValues.constEnd(); ++it) {
-            const QString &key = it.key();
-            const KeywordValueGenerator &producer = it.value();
-            QString val;
-            if (producer) {
-                val = producer();
-            }
-            result.replace(key, val);
-        }
-        return result;
-    }
+    QString fillTemplate(const QString &templ, const KeywordValues &keywordValues) const;
 
     /**
      * @brief Check that the provided template contains all required keywords.
@@ -130,17 +93,7 @@ public:
      * @param templ the template string to check
      * @return true if all keywords are present, false otherwise
      */
-    bool checkTemplate(const QStringList &required, const QString &templ) const {
-        QStringList all = required;
-        const QStringList globals = globalKeywords();
-        for (const QString &gk : globals) {
-            if (!all.contains(gk)) all.append(gk);
-        }
-        for (const QString &kw : all) {
-            if (!templ.contains(kw)) return false;
-        }
-        return true;
-    }
+    bool checkTemplate(const QStringList &required, const QString &templ) const;
 
     /**
      * @brief Perform generation for the provided parsed UiFile.
