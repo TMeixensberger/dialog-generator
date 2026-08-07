@@ -21,6 +21,7 @@ public:
     bool load(const QString &projectDirectory);
     bool create(const QString &projectDirectory);
     bool save();
+    bool addUiFile(const QString &path);
 
     bool isValid() const;
     QString errorString() const;
@@ -29,6 +30,8 @@ public:
     const ProjectFile &projectFile() const;
 
 private:
+    void loadUiFile(const QString &uiFilePath);
+
     std::unique_ptr<ProjectFile> projectFile_;
     QString errorString_;
 };

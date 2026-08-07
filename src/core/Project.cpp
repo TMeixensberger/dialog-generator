@@ -2,6 +2,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -76,6 +77,37 @@ bool Project::save() {
     return true;
 }
 
+bool Project::addUiFile(const QString &path) {
+    if (!projectFile_) {
+        errorString_ = QStringLiteral("No project loaded");
+        return false;
+    }
+
+    const QFileInfo sourceInfo(path);
+    if (!sourceInfo.exists() || !sourceInfo.isFile()) {
+        errorString_ = QStringLiteral("UI file does not exist");
+        return false;
+    }
+
+    const QString sourcePath = sourceInfo.absoluteFilePath();
+    const QString copiedPath = QDir(projectFile_->projectDirectory()).filePath(sourceInfo.fileName());
+
+    if (QFileInfo(copiedPath).absoluteFilePath() != sourcePath) {
+        if (QFile::exists(copiedPath) && !QFile::remove(copiedPath)) {
+            errorString_ = QStringLiteral("Could not replace existing UI file in project directory");
+            return false;
+        }
+        if (!QFile::copy(sourcePath, copiedPath)) {
+            errorString_ = QStringLiteral("Could not copy UI file into project directory");
+            return false;
+        }
+    }
+
+    loadUiFile(copiedPath);
+    errorString_.clear();
+    return true;
+}
+
 bool Project::isValid() const {
     return errorString_.isEmpty() && projectFile_ != nullptr;
 }
@@ -92,6 +124,10 @@ ProjectFile &Project::projectFile() {
 const ProjectFile &Project::projectFile() const {
     Q_ASSERT(projectFile_);
     return *projectFile_;
+}
+
+void Project::loadUiFile(const QString &uiFilePath) {
+    (void)uiFilePath;
 }
 
 } // namespace dlgen::core
