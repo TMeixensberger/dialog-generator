@@ -1,9 +1,8 @@
 #pragma once
 
 #include <QString>
-#include "gens/DefaultTemplates.h"
 
-namespace dlgen::generator {
+namespace dlgen::core {
 
 /**
  * @brief Settings that control generation behaviour.
@@ -18,12 +17,11 @@ struct Settings {
      *
      * Nested struct grouping template strings used by individual generators.
      */
-
     struct Templates {
-        QString Dialog = Template::DialogGenerator; /**< Template content for Dialog generator (default from gens::DefaultTemplates) */
-        QString Factory = Template::FactoryGenerator; /**< Template content for Factory generator (default from gens::DefaultTemplates) */
-        QString DataProvider = Template::DataProviderGenerator; /**< Template content for DataProvider generator (default from gens::DefaultTemplates) */
-        QString Persistor = Template::PersistorGenerator; /**< Template content for Persistor generator (default from gens::DefaultTemplates) */
+        QString Dialog; /**< Template content for Dialog generator */
+        QString Factory; /**< Template content for Factory generator */
+        QString DataProvider; /**< Template content for DataProvider generator */
+        QString Persistor; /**< Template content for Persistor generator */
     } templates; /**< Instance holding all generator templates */
 
     // Selected global keyword values used by templates.
@@ -34,4 +32,4 @@ struct Settings {
     QString dialogNamespace = "NAMESPACE"; /**< Value used for $NAMESPACE$ */
 };
 
-} // namespace dlgen::generator
+} // namespace dlgen::core

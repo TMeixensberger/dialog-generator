@@ -53,6 +53,7 @@ bool ProjectFile::reload() {
     config_ = QJsonObject();
     uiFileNames_.clear();
     uiConfigFileNames_.clear();
+    projectData_.clear();
 
     const QFileInfo directoryInfo(projectDirectory_);
     if (!directoryInfo.exists() || !directoryInfo.isDir()) {
@@ -81,6 +82,7 @@ bool ProjectFile::reload() {
         uiConfigFileNames_.append(toUiConfigFileName(uiFileName));
     }
 
+    // TODO: Populate projectData_ from uiFiles and per-ui settings files.
     return true;
 }
 

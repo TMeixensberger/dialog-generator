@@ -2,8 +2,13 @@
 
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QPair>
 #include <QString>
 #include <QStringList>
+#include <QVector>
+
+#include "Settings.h"
+#include "UiFile.h"
 
 namespace dlgen::core {
 
@@ -17,6 +22,9 @@ namespace dlgen::core {
  */
 class ProjectFile {
 public:
+    using Data = QPair<UiFile, Settings>;
+    using ProjectData = QVector<Data>;
+
     explicit ProjectFile(const QString &projectDirectory);
 
     bool reload();
@@ -28,9 +36,6 @@ public:
     QString projectDirectory() const;
     QString configFilePath() const;
 
-    const QJsonObject &config() const;
-    QJsonValue value(const QString &key) const;
-
     const QStringList &uiFileNames() const;
     const QStringList &uiConfigFileNames() const;
     /**
@@ -40,6 +45,9 @@ public:
     QString uiConfigFilePath(const QString &uiFileName) const;
 
 private:
+    const QJsonObject &config() const;
+    QJsonValue value(const QString &key) const;
+
     static QStringList parseUiFileNames(const QJsonObject &config);
     static QString toUiConfigFileName(const QString &uiFileName);
 
@@ -48,6 +56,7 @@ private:
     QJsonObject config_;
     QStringList uiFileNames_;
     QStringList uiConfigFileNames_;
+    ProjectData projectData_;
     QString errorString_;
 };
 

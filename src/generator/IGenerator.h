@@ -11,6 +11,8 @@
 
 namespace dlgen::generator {
 
+using Settings = ::dlgen::core::Settings;
+
 /**
  * @brief Interface for generators.
  *
