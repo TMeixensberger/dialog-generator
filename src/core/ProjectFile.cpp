@@ -15,7 +15,7 @@ bool writeJsonObject(const QString &filePath, const QJsonObject &jsonObject, QSt
     QSaveFile file(filePath);
     if (!file.open(QIODevice::WriteOnly)) {
         if (errorString != nullptr) {
-            *errorString = QStringLiteral("failed to open config.json for writing");
+            *errorString = QStringLiteral("failed to open '%1' for writing").arg(filePath);
         }
         return false;
     }
@@ -24,7 +24,7 @@ bool writeJsonObject(const QString &filePath, const QJsonObject &jsonObject, QSt
     const qint64 bytesWritten = file.write(jsonBytes);
     if (bytesWritten != static_cast<qint64>(jsonBytes.size())) {
         if (errorString != nullptr) {
-            *errorString = QStringLiteral("failed to write config.json");
+            *errorString = QStringLiteral("failed to write '%1'").arg(filePath);
         }
         file.cancelWriting();
         return false;
@@ -32,7 +32,7 @@ bool writeJsonObject(const QString &filePath, const QJsonObject &jsonObject, QSt
 
     if (!file.commit()) {
         if (errorString != nullptr) {
-            *errorString = QStringLiteral("failed to commit config.json");
+            *errorString = QStringLiteral("failed to commit '%1'").arg(filePath);
         }
         return false;
     }
