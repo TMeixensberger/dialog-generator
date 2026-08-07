@@ -1,7 +1,12 @@
 #pragma once
 
+#include <memory>
 #include <QMainWindow>
 #include "ui_MainWindow.h"
+
+namespace dlgen::core {
+class ProjectFile;
+}
 
 class MainWindow : public QMainWindow {
 public:
@@ -10,6 +15,9 @@ public:
 
 private:
     void addUiFile();
+    void loadProject();
+    void createProject();
 
     Ui::MainWindow ui;
+    std::unique_ptr<dlgen::core::ProjectFile> projectFile_;
 };
