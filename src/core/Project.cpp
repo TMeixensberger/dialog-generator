@@ -152,7 +152,7 @@ bool Project::loadUiFile(const QString &uiFilePath)
         return false;
     }
 
-    projectFile_->loadUiFile(uiFile, settings);
+    projectFile_->loadUiFile(uiFilePath, uiFile, settings);
 
     return true;
 }

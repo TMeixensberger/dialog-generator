@@ -91,7 +91,11 @@ bool ProjectFile::save() {
     return writeJsonObject(configFilePath_, config_, &errorString_);
 }
 
-void ProjectFile::loadUiFile(const UiFile &uiFile, const Settings &settings) {
+void ProjectFile::loadUiFile(const QString &uiFilePath, const UiFile &uiFile, const Settings &settings) {
+    const QString absoluteUiFilePath = QFileInfo(uiFilePath).absoluteFilePath();
+    if (!uiFileNames_.contains(absoluteUiFilePath)) {
+        uiFileNames_.append(absoluteUiFilePath);
+    }
     projectData_.append(Data(uiFile, settings));
 }
 

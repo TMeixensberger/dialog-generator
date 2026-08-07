@@ -29,7 +29,7 @@ public:
 
     bool reload();
     bool save();
-    void loadUiFile(const UiFile &uiFile, const Settings &settings);
+    void loadUiFile(const QString &uiFilePath, const UiFile &uiFile, const Settings &settings);
 
     bool isValid() const;
     QString errorString() const;
