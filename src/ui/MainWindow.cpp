@@ -1,16 +1,11 @@
 #include "MainWindow.h"
 
 #include <iostream>
-#include <QDir>
-#include <QFile>
 #include <QPushButton>
 #include <QFileDialog>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QMessageBox>
 
-#include "ProjectFile.h"
+#include "Project.h"
 #include "Parser.h"
 #include "Generator.h"
 
@@ -47,13 +42,13 @@ void MainWindow::loadProject() {
         return;
     }
 
-    auto projectFile = std::make_unique<dlgen::core::ProjectFile>(directory);
-    if (!projectFile->isValid()) {
-        QMessageBox::critical(this, QStringLiteral("Failed to load project"), projectFile->errorString());
+    auto project = std::make_unique<dlgen::core::Project>();
+    if (!project->load(directory)) {
+        QMessageBox::critical(this, QStringLiteral("Failed to load project"), project->errorString());
         return;
     }
 
-    projectFile_ = std::move(projectFile);
+    project_ = std::move(project);
 }
 
 void MainWindow::createProject() {
@@ -62,67 +57,22 @@ void MainWindow::createProject() {
         return;
     }
 
-    const QString configFilePath = QDir(directory).filePath(QStringLiteral("config.json"));
-    if (QFile::exists(configFilePath)) {
-        QMessageBox::warning(this, QStringLiteral("Project already exists"), QStringLiteral("config.json already exists in this directory"));
+    auto project = std::make_unique<dlgen::core::Project>();
+    if (!project->create(directory)) {
+        QMessageBox::critical(this, QStringLiteral("Failed to create project"), project->errorString());
         return;
     }
-
-    QFile configFile(configFilePath);
-    if (!configFile.open(QIODevice::WriteOnly | QIODevice::NewOnly)) {
-        QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not create config.json"));
-        return;
-    }
-
-    const QJsonObject config{{QStringLiteral("uiFiles"), QJsonArray()}};
-    const QByteArray configBytes = QJsonDocument(config).toJson(QJsonDocument::Indented);
-    const qint64 bytesWritten = configFile.write(configBytes);
-    if (bytesWritten != static_cast<qint64>(configBytes.size())) {
-        configFile.close();
-        if (!QFile::remove(configFilePath)) {
-            QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not clean up invalid config.json"));
-            return;
-        }
-        QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not write config.json"));
-        return;
-    }
-
-    if (!configFile.flush()) {
-        configFile.close();
-        if (!QFile::remove(configFilePath)) {
-            QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not clean up invalid config.json"));
-            return;
-        }
-        QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not write config.json"));
-        return;
-    }
-    configFile.close();
-
-    auto projectFile = std::make_unique<dlgen::core::ProjectFile>(directory);
-    if (!projectFile->isValid()) {
-        if (!QFile::remove(configFilePath)) {
-            QMessageBox::critical(
-                this,
-                QStringLiteral("Failed to create project"),
-                QStringLiteral("Could not clean up invalid config.json (%1)").arg(projectFile->errorString())
-            );
-            return;
-        }
-        QMessageBox::critical(this, QStringLiteral("Failed to create project"), projectFile->errorString());
-        return;
-    }
-
-    projectFile_ = std::move(projectFile);
+    project_ = std::move(project);
 }
 
 void MainWindow::saveProject() {
-    if (!projectFile_) {
+    if (!project_) {
         QMessageBox::warning(this, QStringLiteral("No project loaded"), QStringLiteral("Load or create a project before saving"));
         return;
     }
 
-    if (!projectFile_->save()) {
-        QMessageBox::critical(this, QStringLiteral("Failed to save project"), projectFile_->errorString());
+    if (!project_->save()) {
+        QMessageBox::critical(this, QStringLiteral("Failed to save project"), project_->errorString());
         return;
     }
 }

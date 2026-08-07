@@ -5,7 +5,7 @@
 #include "ui_MainWindow.h"
 
 namespace dlgen::core {
-class ProjectFile;
+class Project;
 }
 
 class MainWindow : public QMainWindow {
@@ -20,5 +20,5 @@ private:
     void saveProject();
 
     Ui::MainWindow ui;
-    std::unique_ptr<dlgen::core::ProjectFile> projectFile_;
+    std::unique_ptr<dlgen::core::Project> project_;
 };
