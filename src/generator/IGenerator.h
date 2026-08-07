@@ -61,14 +61,6 @@ public:
     bool toFile(const QString &content, const QString &filename);
 
     /**
-     * @brief Return a list of global keywords that should always be present in templates.
-     *
-     * Default implementation returns an empty list; concrete generators may
-     * override to provide global keywords relevant to all templates.
-     */
-    virtual QStringList globalKeywords() const;
-
-    /**
      * @brief Return the set of keyword value generators for this generator.
      *
      * Concrete generators may override this to provide generator-specific
@@ -88,7 +80,6 @@ public:
 
     /**
      * @brief Check that the provided template contains all required keywords.
-     *        The check also includes any global keywords returned by globalKeywords().
      * @param required list of keywords that must be present in the template
      * @param templ the template string to check
      * @return true if all keywords are present, false otherwise
