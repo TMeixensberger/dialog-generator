@@ -83,7 +83,12 @@ const QStringList &ProjectFile::uiConfigFileNames() const {
 }
 
 QString ProjectFile::uiConfigFilePath(const QString &uiFileName) const {
-    return QDir(projectDirectory_).filePath(toUiConfigFileName(uiFileName));
+    const int uiFileIndex = uiFileNames_.indexOf(uiFileName);
+    if (uiFileIndex < 0 || uiFileIndex >= uiConfigFileNames_.size()) {
+        return QString();
+    }
+
+    return QDir(projectDirectory_).filePath(uiConfigFileNames_.at(uiFileIndex));
 }
 
 QStringList ProjectFile::parseUiFileNames(const QJsonObject &config) {
