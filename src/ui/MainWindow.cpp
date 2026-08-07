@@ -8,9 +8,14 @@
 #include "Project.h"
 #include "Parser.h"
 #include "Generator.h"
+#include "ProjectTableModel.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     ui.setupUi(this);
+
+    tableModel_ = new ProjectTableModel(this);
+    ui.tableView->setModel(tableModel_);
+
     connect(ui.pushButton_2, &QPushButton::clicked, this, &MainWindow::addUiFile);
     connect(ui.actionLoadProject, &QAction::triggered, this, &MainWindow::loadProject);
     connect(ui.actionCreateProject, &QAction::triggered, this, &MainWindow::createProject);
@@ -49,6 +54,7 @@ void MainWindow::loadProject() {
     }
 
     project_ = std::move(project);
+    refreshTable();
 }
 
 void MainWindow::createProject() {
@@ -63,6 +69,7 @@ void MainWindow::createProject() {
         return;
     }
     project_ = std::move(project);
+    refreshTable();
 }
 
 void MainWindow::saveProject() {
@@ -76,3 +83,8 @@ void MainWindow::saveProject() {
         return;
     }
 }
+
+void MainWindow::refreshTable() {
+    tableModel_->setProject(project_.get());
+}
+

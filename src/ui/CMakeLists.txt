@@ -5,6 +5,8 @@ set(UI_SOURCES
     main.cpp
     MainWindow.cpp
     MainWindow.h
+    ProjectTableModel.cpp
+    ProjectTableModel.h
 )
 
 set(UI_FILES
