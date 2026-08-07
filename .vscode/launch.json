@@ -8,12 +8,9 @@
             "name": "Launch",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceRoot}/build/Debug/dialog-generator",
+            "program": "${workspaceRoot}/build/Debug/src/ui/dialog-generator",
             "args": [],
-            "cwd": "${workspaceRoot}",
-            "env": {
-                "QT_DEBUG_PLUGINS": "1"
-            }
+            "cwd": "${workspaceRoot}"
         }
     ]
 }

@@ -18,14 +18,9 @@ class Generator : public IGenerator {
 public:
     Generator();
 
-    Generator &applySettings(const Settings &s) override { settings_ = s; return *this; }
-    Generator &setTargetPath(const QString &path) override { targetPath_ = path; return *this; }
     Generator &add(IGenerator *g) { gens_.emplace_back(g); return *this; }
 
     bool generate(const ::dlgen::core::UiFile &uiFile) override;
-
-    QString targetFile() const override { return QStringLiteral("Generator"); }
-    QString getTargetPath() const override { return targetPath_; }
 
     class Builder {
     public:
@@ -34,8 +29,7 @@ public:
         Builder &targetPath(const QString &p) { targetPath_ = p; return *this; }
         Generator build() const {
             Generator g;
-            g.settings_ = settings_;
-            g.targetPath_ = targetPath_;
+            g.applySettings(settings_).setTargetPath(targetPath_);
             return g;
         }
         bool generate(const ::dlgen::core::UiFile &uiFile) const {
@@ -48,8 +42,6 @@ public:
     };
 
 private:
-    Settings settings_;
-    QString targetPath_;
     std::vector<std::unique_ptr<IGenerator>> gens_;
 };
 

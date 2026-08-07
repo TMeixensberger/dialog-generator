@@ -15,17 +15,12 @@ class FactoryGenerator : public IGenerator {
 public:
     FactoryGenerator() = default;
 
-    FactoryGenerator &applySettings(const Settings &s) override { settings_ = s; return *this; }
-    FactoryGenerator &setTargetPath(const QString &path) override { targetPath_ = path; return *this; }
-
     bool generate(const ::dlgen::core::UiFile &uiFile) override;
 
-    QString targetFile() const override { return QStringLiteral("FactoryGenerator"); }
-    QString getTargetPath() const override { return targetPath_; }
+    KeywordValues keywordValues() const override { return {}; }
 
 private:
-    Settings settings_;
-    QString targetPath_;
+    // settings_ and targetPath_ are provided by the IGenerator base class
 };
 
 } // namespace dlgen::generator

@@ -25,6 +25,13 @@ struct Settings {
         QString DataProvider = Template::DataProviderGenerator; /**< Template content for DataProvider generator (default from gens::DefaultTemplates) */
         QString Persistor = Template::PersistorGenerator; /**< Template content for Persistor generator (default from gens::DefaultTemplates) */
     } templates; /**< Instance holding all generator templates */
+
+    // Selected global keyword values used by templates.
+    QString project = "PROJECT";   /**< Value used for $PROJECT$ */
+    QString package = "PACKAGE";   /**< Value used for $PACKAGE$ */
+    QString copyright = "COPYRIGHT"; /**< Value used for $COPYRIGHT$ */
+    QString name = "NAME"; /**< Value used for $NAME$ */
+    QString dialogNamespace = "NAMESPACE"; /**< Value used for $NAMESPACE$ */
 };
 
 } // namespace dlgen::generator
