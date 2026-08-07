@@ -8,6 +8,9 @@
 #include <QJsonObject>
 #include <QtGlobal>
 
+#include "Generator.h"
+#include "Parser.h"
+
 namespace dlgen::core {
 
 Project::~Project() = default;
@@ -103,7 +106,9 @@ bool Project::addUiFile(const QString &path) {
         }
     }
 
-    loadUiFile(copiedPath);
+    if (!loadUiFile(copiedPath)) {
+        return false;
+    }
     errorString_.clear();
     return true;
 }
@@ -126,8 +131,22 @@ const ProjectFile &Project::projectFile() const {
     return *projectFile_;
 }
 
-void Project::loadUiFile(const QString &uiFilePath) {
-    (void)uiFilePath;
+bool Project::loadUiFile(const QString &uiFilePath) {
+    const auto uiFile = dlgen::parser::parseUiFile(uiFilePath);
+    if (uiFile.hasError()) {
+        errorString_ = uiFile.error;
+        return false;
+    }
+
+    dlgen::generator::Generator generator;
+    generator.applySettings(dlgen::core::Settings());
+    generator.setTargetPath(QStringLiteral("./output"));
+    if (!generator.generate(uiFile)) {
+        errorString_ = QStringLiteral("Could not generate output from UI file");
+        return false;
+    }
+
+    return true;
 }
 
 } // namespace dlgen::core

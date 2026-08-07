@@ -1,13 +1,10 @@
 #include "MainWindow.h"
 
-#include <iostream>
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMessageBox>
 
 #include "Project.h"
-#include "Parser.h"
-#include "Generator.h"
 #include "ProjectTableModel.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
@@ -25,20 +22,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 MainWindow::~MainWindow() {}
 
 void MainWindow::addUiFile() {
+    if (!project_) {
+        QMessageBox::warning(this, QStringLiteral("No project loaded"), QStringLiteral("Load or create a project before adding UI files"));
+        return;
+    }
+
     const QString filter = QStringLiteral("UI files (*.ui)");
     QString file = QFileDialog::getOpenFileName(this, QStringLiteral("Select UI File"), QString(), filter);
-    if (!file.isEmpty()) {
-        auto uiFile = dlgen::parser::parseUiFile(file);
-
-        dlgen::generator::Generator generator;
-        generator.applySettings(dlgen::generator::Settings());
-        generator.setTargetPath(QStringLiteral("./output"));
-        generator.generate(uiFile);
-
-        uiFile.forEachNamedChild([](const QString &cls, const QString &name){
-            std::cout << cls.toStdString() << " (" << name.toStdString() << ")\n";
-        });
+    if (file.isEmpty()) {
+        return;
     }
+
+    if (!project_->addUiFile(file)) {
+        QMessageBox::critical(this, QStringLiteral("Failed to add UI file"), project_->errorString());
+        return;
+    }
+
+    refreshTable();
 }
 
 void MainWindow::loadProject() {
@@ -87,4 +87,3 @@ void MainWindow::saveProject() {
 void MainWindow::refreshTable() {
     tableModel_->setProject(project_.get());
 }
-
