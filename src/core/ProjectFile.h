@@ -20,6 +20,7 @@ public:
     explicit ProjectFile(const QString &projectDirectory);
 
     bool reload();
+    bool save();
 
     bool isValid() const;
     QString errorString() const;

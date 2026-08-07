@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     connect(ui.pushButton_2, &QPushButton::clicked, this, &MainWindow::addUiFile);
     connect(ui.actionLoadProject, &QAction::triggered, this, &MainWindow::loadProject);
     connect(ui.actionCreateProject, &QAction::triggered, this, &MainWindow::createProject);
+    connect(ui.actionSaveProject, &QAction::triggered, this, &MainWindow::saveProject);
 }
 
 MainWindow::~MainWindow() {}
@@ -112,4 +113,16 @@ void MainWindow::createProject() {
     }
 
     projectFile_ = std::move(projectFile);
+}
+
+void MainWindow::saveProject() {
+    if (!projectFile_) {
+        QMessageBox::warning(this, QStringLiteral("No project loaded"), QStringLiteral("Load or create a project before saving"));
+        return;
+    }
+
+    if (!projectFile_->save()) {
+        QMessageBox::critical(this, QStringLiteral("Failed to save project"), projectFile_->errorString());
+        return;
+    }
 }
