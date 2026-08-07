@@ -9,26 +9,24 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     ui.setupUi(this);
-    connect(ui.pushButton_2, &QPushButton::clicked, this, [this]() {
-        const QString filter = QStringLiteral("UI files (*.ui)");
-        QString file = QFileDialog::getOpenFileName(this, QStringLiteral("Select UI File"), QString(), filter);
-        if (!file.isEmpty()) {
-            auto uiFile = dlgen::parser::parseUiFile(file);
-
-            dlgen::generator::Generator generator;
-            generator.applySettings(dlgen::generator::Settings());
-            generator.setTargetPath(QStringLiteral("./output"));
-            generator.generate(uiFile);
-
-            uiFile.forEachNamedChild([](const QString &cls, const QString &name){
-                std::cout << cls.toStdString() << " (" << name.toStdString() << ")\n";
-            });
-        }
-    });
+    connect(ui.pushButton_2, &QPushButton::clicked, this, &MainWindow::addUiFile);
 }
 
 MainWindow::~MainWindow() {}
 
-void MainWindow::createUI() {}
+void MainWindow::addUiFile() {
+    const QString filter = QStringLiteral("UI files (*.ui)");
+    QString file = QFileDialog::getOpenFileName(this, QStringLiteral("Select UI File"), QString(), filter);
+    if (!file.isEmpty()) {
+        auto uiFile = dlgen::parser::parseUiFile(file);
 
-void MainWindow::showEvent(QShowEvent *) {}
+        dlgen::generator::Generator generator;
+        generator.applySettings(dlgen::generator::Settings());
+        generator.setTargetPath(QStringLiteral("./output"));
+        generator.generate(uiFile);
+
+        uiFile.forEachNamedChild([](const QString &cls, const QString &name){
+            std::cout << cls.toStdString() << " (" << name.toStdString() << ")\n";
+        });
+    }
+}

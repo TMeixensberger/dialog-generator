@@ -8,11 +8,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     virtual ~MainWindow();
 
-    void createUI();
-
-protected:
-    void showEvent(QShowEvent *) override;
-
 private:
+    void addUiFile();
+
     Ui::MainWindow ui;
 };
