@@ -16,7 +16,7 @@ add_library(generator STATIC ${GENERATOR_SOURCES})
 # expose headers at generator root and gens/ subdirectory
 target_include_directories(generator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/gens)
 
-target_link_libraries(generator PUBLIC Qt5::Core Qt5::Widgets)
+target_link_libraries(generator PUBLIC core Qt5::Core Qt5::Widgets)
 
 install(TARGETS generator
     ARCHIVE DESTINATION lib
