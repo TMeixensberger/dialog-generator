@@ -42,7 +42,7 @@ bool Project::create(const QString &projectDirectory) {
         return false;
     }
 
-    const QJsonObject config{{QStringLiteral("uiFiles"), QJsonArray()}};
+    const QJsonObject config{{QStringLiteral("uiFiles"), QJsonArray()}, {QStringLiteral("uiConfigFiles"), QJsonArray()}};
     const QByteArray configBytes = QJsonDocument(config).toJson(QJsonDocument::Indented);
     const qint64 bytesWritten = configFile.write(configBytes);
     if (bytesWritten != static_cast<qint64>(configBytes.size()) || !configFile.flush()) {

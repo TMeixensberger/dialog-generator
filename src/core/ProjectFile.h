@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QJsonObject>
-#include <QJsonValue>
 #include <QPair>
 #include <QString>
 #include <QStringList>
@@ -46,15 +45,14 @@ public:
     QString uiConfigFilePath(const QString &uiFileName) const;
 
 private:
-    const QJsonObject &config() const;
-    QJsonValue value(const QString &key) const;
+    QJsonObject toJsonObject() const;
 
     static QStringList parseUiFileNames(const QJsonObject &config);
+    static QStringList parseUiConfigFileNames(const QJsonObject &config);
     static QString toUiConfigFileName(const QString &uiFileName);
 
     QString projectDirectory_;
     QString configFilePath_;
-    QJsonObject config_;
     QStringList uiFileNames_;
     QStringList uiConfigFileNames_;
     ProjectData projectData_;
