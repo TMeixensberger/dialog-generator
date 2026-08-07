@@ -39,39 +39,31 @@ public:
     virtual IGenerator &setTargetPath(const QString &path) { targetPath_ = path; return *this; }
 
     /**
-     * @brief Return the target file name for this generator.
-     *
-     * Implementations should return the file name (or identifier) that will be
-     * appended to the configured target path when writing output. For example,
-     * a DialogGenerator may return "DialogGenerator" or a specific filename.
-     */
-    virtual QString targetFile() const = 0;
-
-    /**
      * @brief Return the currently configured target path.
      *
      * Implementations must provide access to the target path previously set
      * via setTargetPath(). This is used by the provided helper to compute
-     * the final path when writing files.
+     * the full output path when writing files.
      */
     virtual QString getTargetPath() const { return targetPath_; }
 
     /**
-     * @brief Convenience helper to write provided content into the configured target file.
+     * @brief Convenience helper to write provided content into a file under the configured target path.
      *
-     * This implemented helper uses getTargetPath() and targetFile() to form the
-     * destination path and writes `content` to that file. Returns true on success.
+     * This implemented helper uses getTargetPath() and the provided `filename`
+     * to form the destination path and writes `content` to that file.
+     * Returns true on success.
      *
      * @param content Text content to write to the target file
+     * @param filename Name of the file to write inside the configured target path
      * @return true if the file was written successfully, false otherwise
      */
-    bool toFile(const QString &content) {
+    bool toFile(const QString &content, const QString &filename) {
         QString path = getTargetPath();
         if (path.isEmpty()) return false;
-        QString fname = targetFile();
-        if (fname.isEmpty()) return false;
+        if (filename.isEmpty()) return false;
         QDir dir(path);
-        QString full = dir.filePath(fname);
+        QString full = dir.filePath(filename);
         QFile f(full);
         if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) return false;
         QTextStream out(&f);

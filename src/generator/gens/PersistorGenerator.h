@@ -19,8 +19,6 @@ public:
 
     KeywordValues keywordValues() const override { return {}; }
 
-    QString targetFile() const override { return QStringLiteral("PersistorGenerator"); }
-
 private:
     // settings_ and targetPath_ are provided by the IGenerator base class
 };

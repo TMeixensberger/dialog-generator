@@ -20,8 +20,6 @@ public:
 
     KeywordValues keywordValues() const override;
 
-    QString targetFile() const override { return QStringLiteral("DialogGenerator"); }
-
 private:
     // settings_ and targetPath_ are provided by the IGenerator base class
 };

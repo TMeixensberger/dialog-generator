@@ -22,8 +22,6 @@ public:
 
     bool generate(const ::dlgen::core::UiFile &uiFile) override;
 
-    QString targetFile() const override { return QStringLiteral("Generator"); }
-
     class Builder {
     public:
         Builder() = default;
