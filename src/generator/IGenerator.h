@@ -94,56 +94,21 @@ public:
      * The returned callable matches the value type of keywordValues entries
      * used by concrete generators. It returns a QString when invoked.
      */
-    virtual std::function<QString()> debug() const {
-        return []() { return QStringLiteral("debug"); };
-    }
-
-    /**
-     * @brief Return a project keyword value generator.
-     *
-     * The returned callable matches the value type of keywordValues entries
-     * used by concrete generators. It returns a QString when invoked.
-     */
-    virtual std::function<QString()> project() const {
-        return [this]() { return settings_.project; };
-    }
-
-    /**
-     * @brief Return a package keyword value generator.
-     *
-     * The returned callable matches the value type of keywordValues entries
-     * used by concrete generators. It returns a QString when invoked.
-     */
-    virtual std::function<QString()> package() const {
-        return [this]() { return settings_.package; };
-    }
-
-    /**
-     * @brief Return a copyright keyword value generator.
-     *
-     * The returned callable matches the value type of keywordValues entries
-     * used by concrete generators. It returns a QString when invoked.
-     */
-    virtual std::function<QString()> copyright() const {
-        return [this]() { return settings_.copyright; };
-    }
-
     /**
      * @brief Return the set of keyword value generators for this generator.
      *
      * Concrete generators may override this to provide generator-specific
-     * keyword replacement values. The default implementation returns an empty
-     * map.
+     * keyword replacement values. The default implementation returns a set of
+     * globally supported keyword generators.
      */
-    virtual KeywordValues keywordValues() const 
-    { 
+    virtual KeywordValues keywordValues() const {
         KeywordValues values;
-        values.insert("$DEBUG$", debug());
-        values.insert("$PROJECT$", project());
-        values.insert("$PACKAGE$", package());
-        values.insert("$COPYRIGHT$", copyright());
+        values.insert("$DEBUG$", []() { return QStringLiteral("debug"); });
+        values.insert("$PROJECT$", [this]() { return settings_.project; });
+        values.insert("$PACKAGE$", [this]() { return settings_.package; });
+        values.insert("$COPYRIGHT$", [this]() { return settings_.copyright; });
         return values;
-    } 
+    }
 
     /**
      * @brief Replace keywords in a template using the provided value generators.
