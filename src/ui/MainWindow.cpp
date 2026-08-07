@@ -62,19 +62,51 @@ void MainWindow::createProject() {
     }
 
     const QString configFilePath = QDir(directory).filePath(QStringLiteral("config.json"));
-    if (!QFile::exists(configFilePath)) {
-        QFile configFile(configFilePath);
-        if (!configFile.open(QIODevice::WriteOnly | QIODevice::NewOnly)) {
-            QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not create config.json"));
+    if (QFile::exists(configFilePath)) {
+        QMessageBox::warning(this, QStringLiteral("Project already exists"), QStringLiteral("config.json already exists in this directory"));
+        return;
+    }
+
+    QFile configFile(configFilePath);
+    if (!configFile.open(QIODevice::WriteOnly | QIODevice::NewOnly)) {
+        QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not create config.json"));
+        return;
+    }
+
+    const QJsonObject config{{QStringLiteral("uiFiles"), QJsonArray()}};
+    const QByteArray configBytes = QJsonDocument(config).toJson(QJsonDocument::Indented);
+    const qint64 bytesWritten = configFile.write(configBytes);
+    if (bytesWritten != static_cast<qint64>(configBytes.size())) {
+        configFile.close();
+        if (!QFile::remove(configFilePath)) {
+            QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not clean up invalid config.json"));
             return;
         }
-
-        const QJsonObject config{{QStringLiteral("uiFiles"), QJsonArray()}};
-        configFile.write(QJsonDocument(config).toJson(QJsonDocument::Indented));
+        QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not write config.json"));
+        return;
     }
+
+    if (!configFile.flush()) {
+        configFile.close();
+        if (!QFile::remove(configFilePath)) {
+            QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not clean up invalid config.json"));
+            return;
+        }
+        QMessageBox::critical(this, QStringLiteral("Failed to create project"), QStringLiteral("Could not write config.json"));
+        return;
+    }
+    configFile.close();
 
     auto projectFile = std::make_unique<dlgen::core::ProjectFile>(directory);
     if (!projectFile->isValid()) {
+        if (!QFile::remove(configFilePath)) {
+            QMessageBox::critical(
+                this,
+                QStringLiteral("Failed to create project"),
+                QStringLiteral("Could not clean up invalid config.json (%1)").arg(projectFile->errorString())
+            );
+            return;
+        }
         QMessageBox::critical(this, QStringLiteral("Failed to create project"), projectFile->errorString());
         return;
     }
