@@ -1,4 +1,5 @@
 #include "IGenerator.h"
+#include <QRegularExpression>
 
 namespace dlgen::generator {
 
@@ -64,14 +65,16 @@ QString IGenerator::formatDebugComment(const KeywordValues &vals) const {
     return lines.join(QLatin1Char('\n'));
 }
  
-bool IGenerator::checkTemplate(const QStringList &required, const QString &templ) const {
-    QStringList all = required;
-    const QStringList globals = keywordValues().keys();
-    for (const QString &gk : globals) {
-        if (!all.contains(gk)) all.append(gk);
-    }
-    for (const QString &kw : all) {
-        if (!templ.contains(kw)) return false;
+bool IGenerator::checkTemplate(const QStringList &availableKeys, const QString &templ) const {
+    const QRegularExpression placeholderPattern(QStringLiteral("\$[A-Za-z0-9_]+\$"));
+    auto matches = placeholderPattern.globalMatch(templ);
+
+    while (matches.hasNext()) {
+        QRegularExpressionMatch match = matches.next();
+        const QString placeholder = match.captured(0);
+        if (!availableKeys.contains(placeholder)) {
+            return false;
+        }
     }
     return true;
 }

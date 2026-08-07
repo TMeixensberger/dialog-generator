@@ -76,12 +76,12 @@ public:
     QString fillTemplate(const QString &templ, const KeywordValues &keywordValues) const;
 
     /**
-     * @brief Check that the provided template contains all required keywords.
-     * @param required list of keywords that must be present in the template
+     * @brief Check that the provided keyword keys are enough to satisfy the template.
+     * @param availableKeys list of keyword names available to fill the template
      * @param templ the template string to check
-     * @return true if all keywords are present, false otherwise
+     * @return true if all placeholders in the template are available, false otherwise
      */
-    bool checkTemplate(const QStringList &required, const QString &templ) const;
+    bool checkTemplate(const QStringList &availableKeys, const QString &templ) const;
  
     /**
      * @brief Perform generation for the provided parsed UiFile.
