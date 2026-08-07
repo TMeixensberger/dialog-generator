@@ -8,13 +8,9 @@ using KeywordValues = QMap<QString, KeywordValueGenerator>;
 namespace dlgen::generator {
 
 bool DialogGenerator::generate(const ::dlgen::core::UiFile &uiFile) {
-    // TODO: implement dialog-specific generation logic
-
-    // define an empty keyword list for template validation
-    QStringList requiredKeywords = keywordValues().keys();
 
     // validate the configured template for this generator
-    if (!checkTemplate(requiredKeywords, settings_.templates.Dialog)) {
+    if (!checkTemplate(keywordValues().keys(), settings_.templates.Dialog)) {
         return false; // missing required keywords (none defined -> will pass)
     }
 
@@ -29,7 +25,7 @@ bool DialogGenerator::generate(const ::dlgen::core::UiFile &uiFile) {
 KeywordValues DialogGenerator::keywordValues() const {
     KeywordValues values = IGenerator::keywordValues();
     
-    values.insert("$NAME$", debug());
+    values.insert("$NAME$", [this]() { return settings_.name; });
     values.insert("$NAMESPACE$", debug());
     values.insert("$ROLES$", debug());
     values.insert("$WIDGETS$", debug());

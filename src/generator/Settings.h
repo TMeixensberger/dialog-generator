@@ -30,6 +30,8 @@ struct Settings {
     QString project;   /**< Value used for $PROJECT$ */
     QString package;   /**< Value used for $PACKAGE$ */
     QString copyright; /**< Value used for $COPYRIGHT$ */
+    QString name = "TEST"; /**< Value used for $NAME$ */
+    QString dialogNamespace; /**< Value used for $NAMESPACE$ */
 };
 
 } // namespace dlgen::generator
