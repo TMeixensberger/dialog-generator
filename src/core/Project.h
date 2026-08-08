@@ -30,8 +30,6 @@ public:
     const ProjectFile &projectFile() const;
 
 private:
-    bool loadUiFile(const QString &uiFilePath);
-
     std::unique_ptr<ProjectFile> projectFile_;
     QString errorString_;
 };

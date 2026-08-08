@@ -8,8 +8,6 @@
 #include <QJsonObject>
 #include <QtGlobal>
 
-#include "Parser.h"
-
 namespace dlgen::core {
 
 Project::~Project() = default;
@@ -113,7 +111,7 @@ bool Project::addUiFile(const QString &path) {
         }
     }
 
-    if (!loadUiFile(copiedPath)) {
+    if (!projectFile_->loadUiFile(copiedPath, &errorString_)) {
         return false;
     }
     errorString_.clear();
@@ -136,25 +134,6 @@ ProjectFile &Project::projectFile() {
 const ProjectFile &Project::projectFile() const {
     Q_ASSERT(projectFile_);
     return *projectFile_;
-}
-
-bool Project::loadUiFile(const QString &uiFilePath)
-{
-    const auto uiFile = dlgen::parser::parseUiFile(uiFilePath);
-    if (uiFile.hasError()) {
-        errorString_ = uiFile.error;
-        return false;
-    }
-    
-    const QString settingsFilePath = QFileInfo(uiFilePath).absoluteFilePath() + QStringLiteral(".settings");
-    Settings settings;
-    if (!SettingsStorage::read(settingsFilePath, &settings, &errorString_)) {
-        return false;
-    }
-
-    projectFile_->loadUiFile(uiFilePath, uiFile, settings);
-
-    return true;
 }
 
 } // namespace dlgen::core
