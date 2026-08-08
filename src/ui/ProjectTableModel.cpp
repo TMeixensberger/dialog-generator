@@ -1,7 +1,6 @@
 #include "ProjectTableModel.h"
 
 #include "Project.h"
-#include "ProjectFile.h"
 
 ProjectTableModel::ProjectTableModel(QObject *parent)
     : QAbstractTableModel(parent)
@@ -11,17 +10,16 @@ ProjectTableModel::ProjectTableModel(QObject *parent)
 void ProjectTableModel::setProject(dlgen::core::Project *project)
 {
     beginResetModel();
-    uiFileNames_.clear();
-    if (project && project->isValid()) {
-        uiFileNames_ = project->projectFile().uiFileNames();
-    }
+    projectData_ = (project && project->isValid())
+        ? &project->projectFile().projectData()
+        : nullptr;
     endResetModel();
 }
 
 int ProjectTableModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) return 0;
-    return uiFileNames_.size();
+    return projectData_ ? projectData_->size() : 0;
 }
 
 int ProjectTableModel::columnCount(const QModelIndex &parent) const
@@ -32,13 +30,13 @@ int ProjectTableModel::columnCount(const QModelIndex &parent) const
 
 QVariant ProjectTableModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() >= uiFileNames_.size())
+    if (!projectData_ || !index.isValid() || index.row() >= projectData_->size())
         return {};
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
         case ColumnUiFile:
-            return uiFileNames_.at(index.row());
+            return projectData_->at(index.row()).second.uiFilePath;
         case ColumnSettings:
             return QStringLiteral("Settings");
         case ColumnPreview:

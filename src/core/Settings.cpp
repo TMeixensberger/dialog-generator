@@ -26,6 +26,7 @@ QJsonObject toJson(const Settings &settings) {
     root.insert(QStringLiteral("copyright"), settings.copyright);
     root.insert(QStringLiteral("name"), settings.name);
     root.insert(QStringLiteral("dialogNamespace"), settings.dialogNamespace);
+    root.insert(QStringLiteral("uiFilePath"), settings.uiFilePath);
     return root;
 }
 
@@ -50,6 +51,7 @@ bool fromJson(const QJsonObject &root, Settings *settings) {
     result.copyright = root.value(QStringLiteral("copyright")).toString(result.copyright);
     result.name = root.value(QStringLiteral("name")).toString(result.name);
     result.dialogNamespace = root.value(QStringLiteral("dialogNamespace")).toString(result.dialogNamespace);
+    result.uiFilePath = root.value(QStringLiteral("uiFilePath")).toString(result.uiFilePath);
 
     *settings = result;
     return true;

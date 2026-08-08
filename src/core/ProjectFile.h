@@ -28,7 +28,7 @@ public:
 
     bool reload();
     bool save();
-    void loadUiFile(const QString &uiFilePath, const UiFile &uiFile, const Settings &settings);
+    void loadUiFile(const QString &uiFilePath, const UiFile &uiFile, Settings settings);
 
     bool isValid() const;
     QString errorString() const;
@@ -36,16 +36,14 @@ public:
     QString projectDirectory() const;
     QString configFilePath() const;
 
-    const QStringList &uiFileNames() const;
-    const QStringList &uiConfigFileNames() const;
-    /**
-     * @brief Return the absolute path to the derived config file for a tracked UI file.
-     * @return Empty string when uiFileName is not part of the loaded project config.
-     */
-    QString uiConfigFilePath(const QString &uiFileName) const;
+    const ProjectData &projectData() const;
 
 private:
     QJsonObject toJsonObject() const;
+
+    const QStringList &uiFileNames() const;
+    const QStringList &uiConfigFileNames() const;
+    QString uiConfigFilePath(const QString &uiFileName) const;
 
     static QStringList parseUiFileNames(const QJsonObject &config);
     static QStringList parseUiConfigFileNames(const QJsonObject &config);

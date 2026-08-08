@@ -1,7 +1,8 @@
 #pragma once
 
 #include <QAbstractTableModel>
-#include <QStringList>
+
+#include "ProjectFile.h"
 
 namespace dlgen::core {
 class Project;
@@ -27,5 +28,5 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
 private:
-    QStringList uiFileNames_;
+    const dlgen::core::ProjectFile::ProjectData *projectData_ = nullptr;
 };

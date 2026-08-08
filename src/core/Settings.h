@@ -30,6 +30,7 @@ struct Settings {
     QString copyright = "COPYRIGHT"; /**< Value used for $COPYRIGHT$ */
     QString name = "NAME"; /**< Value used for $NAME$ */
     QString dialogNamespace = "NAMESPACE"; /**< Value used for $NAMESPACE$ */
+    QString uiFilePath; /**< Absolute path to the UI file these settings belong to */
 };
 
 /**
