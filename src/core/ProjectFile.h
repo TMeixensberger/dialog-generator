@@ -1,10 +1,8 @@
 #pragma once
 
 #include <QJsonObject>
-#include <QJsonValue>
 #include <QPair>
 #include <QString>
-#include <QStringList>
 #include <QVector>
 
 #include "Settings.h"
@@ -13,12 +11,11 @@
 namespace dlgen::core {
 
 /**
- * @brief Loads and exposes project configuration files from a project directory.
+ * @brief Loads and persists project configuration from a project directory.
  *
- * A project directory is expected to contain a top-level `config.json` file.
- * The parsed JSON object is kept in memory and can be queried directly, while
- * the referenced UI file names from the `uiFiles` array are tracked together
- * with their derived per-UI config file names.
+ * A project directory is expected to contain a top-level `config.json` file
+ * that tracks the UI files belonging to the project. Each tracked UI file is
+ * parsed and paired with its per-file settings on load.
  */
 class ProjectFile {
 public:
@@ -30,32 +27,27 @@ public:
     bool reload();
     bool save();
 
+    /**
+     * @brief Parse a UI file and its sibling settings file and add them to the project.
+     * @param uiFilePath Absolute or relative path to the .ui file.
+     * @param errorString Optional; set on failure.
+     * @return True on success.
+     */
+    bool loadUiFile(const QString &uiFilePath, QString *errorString = nullptr);
+
     bool isValid() const;
     QString errorString() const;
 
     QString projectDirectory() const;
     QString configFilePath() const;
 
-    const QStringList &uiFileNames() const;
-    const QStringList &uiConfigFileNames() const;
-    /**
-     * @brief Return the absolute path to the derived config file for a tracked UI file.
-     * @return Empty string when uiFileName is not part of the loaded project config.
-     */
-    QString uiConfigFilePath(const QString &uiFileName) const;
+    const ProjectData &projectData() const;
 
 private:
-    const QJsonObject &config() const;
-    QJsonValue value(const QString &key) const;
-
-    static QStringList parseUiFileNames(const QJsonObject &config);
-    static QString toUiConfigFileName(const QString &uiFileName);
+    QJsonObject toJsonObject() const;
 
     QString projectDirectory_;
     QString configFilePath_;
-    QJsonObject config_;
-    QStringList uiFileNames_;
-    QStringList uiConfigFileNames_;
     ProjectData projectData_;
     QString errorString_;
 };

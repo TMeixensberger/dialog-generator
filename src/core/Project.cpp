@@ -2,6 +2,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -72,6 +73,48 @@ bool Project::save() {
         return false;
     }
 
+    errorString_.clear();
+    return true;
+}
+
+bool Project::addUiFile(const QString &path) {
+    if (!projectFile_) {
+        errorString_ = QStringLiteral("No project loaded");
+        return false;
+    }
+
+    const QFileInfo sourceInfo(path);
+    if (!sourceInfo.exists() || !sourceInfo.isFile()) {
+        errorString_ = QStringLiteral("UI file does not exist");
+        return false;
+    }
+
+    const QString sourcePath = sourceInfo.absoluteFilePath();
+    const QDir projectDir(projectFile_->projectDirectory());
+    const QString copiedPath = projectDir.absoluteFilePath(sourceInfo.fileName());
+
+    if (QFileInfo(copiedPath).absoluteFilePath() != sourcePath) {
+        if (QFile::exists(copiedPath) && !QFile::remove(copiedPath)) {
+            errorString_ = QStringLiteral("Could not replace existing UI file in project directory");
+            return false;
+        }
+        if (!QFile::copy(sourcePath, copiedPath)) {
+            errorString_ = QStringLiteral("Could not copy UI file into project directory");
+            return false;
+        }
+    }
+
+    const QString settingsFilePath = copiedPath + QStringLiteral(".settings");
+    if (!QFile::exists(settingsFilePath)) {
+        Settings settings;
+        if (!SettingsStorage::write(settingsFilePath, settings, &errorString_)) {
+            return false;
+        }
+    }
+
+    if (!projectFile_->loadUiFile(sourceInfo.fileName(), &errorString_)) {
+        return false;
+    }
     errorString_.clear();
     return true;
 }

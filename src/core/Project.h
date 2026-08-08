@@ -21,6 +21,7 @@ public:
     bool load(const QString &projectDirectory);
     bool create(const QString &projectDirectory);
     bool save();
+    bool addUiFile(const QString &path);
 
     bool isValid() const;
     QString errorString() const;

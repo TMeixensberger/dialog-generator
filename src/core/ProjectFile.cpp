@@ -7,6 +7,8 @@
 #include <QJsonDocument>
 #include <QSaveFile>
 
+#include "Parser.h"
+
 namespace dlgen::core {
 
 namespace {
@@ -50,9 +52,6 @@ ProjectFile::ProjectFile(const QString &projectDirectory)
 
 bool ProjectFile::reload() {
     errorString_.clear();
-    config_ = QJsonObject();
-    uiFileNames_.clear();
-    uiConfigFileNames_.clear();
     projectData_.clear();
 
     const QFileInfo directoryInfo(projectDirectory_);
@@ -76,19 +75,45 @@ bool ProjectFile::reload() {
         return false;
     }
 
-    config_ = document.object();
-    uiFileNames_ = parseUiFileNames(config_);
-    for (const auto &uiFileName : uiFileNames_) {
-        uiConfigFileNames_.append(toUiConfigFileName(uiFileName));
+    const QJsonArray uiFiles = document.object().value(QStringLiteral("uiFiles")).toArray();
+    for (const auto &uiFileValue : uiFiles) {
+        const QString uiFilePath = uiFileValue.toString().trimmed();
+        if (!uiFilePath.isEmpty()) {
+            if (!loadUiFile(uiFilePath, &errorString_)) {
+                return false;
+            }
+        }
     }
 
-    // TODO: Populate projectData_ from uiFiles and per-ui settings files.
     return true;
 }
 
 bool ProjectFile::save() {
     errorString_.clear();
-    return writeJsonObject(configFilePath_, config_, &errorString_);
+    return writeJsonObject(configFilePath_, toJsonObject(), &errorString_);
+}
+
+bool ProjectFile::loadUiFile(const QString &uiFilePath, QString *errorString) {
+    const QDir projectDir(projectDirectory_);
+    const QString absoluteUiFilePath = projectDir.absoluteFilePath(uiFilePath);
+
+    const auto uiFile = dlgen::parser::parseUiFile(absoluteUiFilePath);
+    if (uiFile.hasError()) {
+        if (errorString != nullptr) {
+            *errorString = uiFile.error;
+        }
+        return false;
+    }
+
+    const QString settingsFilePath = absoluteUiFilePath + QStringLiteral(".settings");
+    Settings settings;
+    if (!SettingsStorage::read(settingsFilePath, &settings, errorString)) {
+        return false;
+    }
+
+    settings.uiFilePath = projectDir.relativeFilePath(absoluteUiFilePath);
+    projectData_.append(Data(uiFile, settings));
+    return true;
 }
 
 bool ProjectFile::isValid() const {
@@ -107,46 +132,19 @@ QString ProjectFile::configFilePath() const {
     return configFilePath_;
 }
 
-const QJsonObject &ProjectFile::config() const {
-    return config_;
+const ProjectFile::ProjectData &ProjectFile::projectData() const {
+    return projectData_;
 }
 
-QJsonValue ProjectFile::value(const QString &key) const {
-    return config_.value(key);
-}
-
-const QStringList &ProjectFile::uiFileNames() const {
-    return uiFileNames_;
-}
-
-const QStringList &ProjectFile::uiConfigFileNames() const {
-    return uiConfigFileNames_;
-}
-
-QString ProjectFile::uiConfigFilePath(const QString &uiFileName) const {
-    const int uiFileIndex = uiFileNames_.indexOf(uiFileName);
-    if (uiFileIndex < 0 || uiFileIndex >= uiConfigFileNames_.size()) {
-        return QString();
+QJsonObject ProjectFile::toJsonObject() const {
+    QJsonArray uiFiles;
+    for (const auto &data : projectData_) {
+        uiFiles.append(data.second.uiFilePath);
     }
 
-    return QDir(projectDirectory_).filePath(uiConfigFileNames_.at(uiFileIndex));
-}
-
-QStringList ProjectFile::parseUiFileNames(const QJsonObject &config) {
-    QStringList uiFileNames;
-    const QJsonArray uiFiles = config.value(QStringLiteral("uiFiles")).toArray();
-    for (const auto &uiFileValue : uiFiles) {
-        const QString uiFileName = uiFileValue.toString().trimmed();
-        if (!uiFileName.isEmpty()) {
-            uiFileNames.append(uiFileName);
-        }
-    }
-    return uiFileNames;
-}
-
-QString ProjectFile::toUiConfigFileName(const QString &uiFileName) {
-    const QFileInfo uiFileInfo(uiFileName);
-    return uiFileInfo.completeBaseName() + QStringLiteral(".json");
+    QJsonObject config;
+    config.insert(QStringLiteral("uiFiles"), uiFiles);
+    return config;
 }
 
 } // namespace dlgen::core
