@@ -40,7 +40,7 @@ bool Project::create(const QString &projectDirectory) {
         return false;
     }
 
-    const QJsonObject config{{QStringLiteral("uiFiles"), QJsonArray()}, {QStringLiteral("uiConfigFiles"), QJsonArray()}};
+    const QJsonObject config{{QStringLiteral("uiFiles"), QJsonArray()}};
     const QByteArray configBytes = QJsonDocument(config).toJson(QJsonDocument::Indented);
     const qint64 bytesWritten = configFile.write(configBytes);
     if (bytesWritten != static_cast<qint64>(configBytes.size()) || !configFile.flush()) {
@@ -90,7 +90,8 @@ bool Project::addUiFile(const QString &path) {
     }
 
     const QString sourcePath = sourceInfo.absoluteFilePath();
-    const QString copiedPath = QDir(projectFile_->projectDirectory()).filePath(sourceInfo.fileName());
+    const QDir projectDir(projectFile_->projectDirectory());
+    const QString copiedPath = projectDir.absoluteFilePath(sourceInfo.fileName());
 
     if (QFileInfo(copiedPath).absoluteFilePath() != sourcePath) {
         if (QFile::exists(copiedPath) && !QFile::remove(copiedPath)) {
@@ -103,7 +104,7 @@ bool Project::addUiFile(const QString &path) {
         }
     }
 
-    const QString settingsFilePath = QFileInfo(copiedPath).absoluteFilePath() + QStringLiteral(".settings");
+    const QString settingsFilePath = copiedPath + QStringLiteral(".settings");
     if (!QFile::exists(settingsFilePath)) {
         Settings settings;
         if (!SettingsStorage::write(settingsFilePath, settings, &errorString_)) {
@@ -111,7 +112,7 @@ bool Project::addUiFile(const QString &path) {
         }
     }
 
-    if (!projectFile_->loadUiFile(copiedPath, &errorString_)) {
+    if (!projectFile_->loadUiFile(sourceInfo.fileName(), &errorString_)) {
         return false;
     }
     errorString_.clear();

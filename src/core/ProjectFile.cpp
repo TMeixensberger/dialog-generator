@@ -94,7 +94,10 @@ bool ProjectFile::save() {
 }
 
 bool ProjectFile::loadUiFile(const QString &uiFilePath, QString *errorString) {
-    const auto uiFile = dlgen::parser::parseUiFile(uiFilePath);
+    const QDir projectDir(projectDirectory_);
+    const QString absoluteUiFilePath = projectDir.absoluteFilePath(uiFilePath);
+
+    const auto uiFile = dlgen::parser::parseUiFile(absoluteUiFilePath);
     if (uiFile.hasError()) {
         if (errorString != nullptr) {
             *errorString = uiFile.error;
@@ -102,14 +105,13 @@ bool ProjectFile::loadUiFile(const QString &uiFilePath, QString *errorString) {
         return false;
     }
 
-    const QString absoluteUiFilePath = QFileInfo(uiFilePath).absoluteFilePath();
     const QString settingsFilePath = absoluteUiFilePath + QStringLiteral(".settings");
     Settings settings;
     if (!SettingsStorage::read(settingsFilePath, &settings, errorString)) {
         return false;
     }
 
-    settings.uiFilePath = absoluteUiFilePath;
+    settings.uiFilePath = projectDir.relativeFilePath(absoluteUiFilePath);
     projectData_.append(Data(uiFile, settings));
     return true;
 }
