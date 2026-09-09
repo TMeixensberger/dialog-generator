@@ -1,5 +1,6 @@
 #include "DynamicDialogPersistor.hpp"
 #include "DynamicDialog.hpp"
+#include "widgets/Sine.hpp"
 #include "widgets/Square.hpp"
 
 DynamicDialogPersistor::DynamicDialogPersistor(IDynamicDialogDataProvider &dataProvider)
@@ -8,14 +9,19 @@ DynamicDialogPersistor::DynamicDialogPersistor(IDynamicDialogDataProvider &dataP
 
 void DynamicDialogPersistor::load()
 {
-    const QStringList operations = { "Add", "Subtract", "Multiply", "Divide" };
+    const QStringList operations = { "Add", "Square", "Multiply", "Divide" };
     const auto data = m_dataProvider.getData();
+    QVariantList widgets;
+    widgets.append(QVariant::fromValue<QWidget *>(new Sine));
+    for (qsizetype i = 1; i < operations.size(); ++i) {
+        widgets.append(QVariant::fromValue<QWidget *>(new Square));
+    }
 
     m_model->setData(index(DynamicDialog::Widgets::OperationSelection), QVariant::fromValue(data.operation), static_cast<int>(Qt::DisplayRole));
     m_model->setData(index(DynamicDialog::Widgets::OperationSelection), QVariant::fromValue(operations), static_cast<int>(DynamicDialog::Roles::ListRole));
     m_model->setData(index(DynamicDialog::Widgets::OperationData),
-                     QVariant::fromValue<QWidget *>(new Square),
-                     static_cast<int>(DynamicDialog::Roles::WidgetRole));
+                     widgets,
+                     static_cast<int>(DynamicDialog::Roles::ListRole));
 }
 
 void DynamicDialogPersistor::store() {

@@ -1,6 +1,7 @@
 #include "DynamicDialog.hpp"
 
 #include <QComboBox>
+#include <QVariantList>
 #include <QtGlobal>
 
 DynamicDialog::DynamicDialog(QAbstractItemModel& model, QWidget *parent)
@@ -13,6 +14,9 @@ DynamicDialog::DynamicDialog(QAbstractItemModel& model, QWidget *parent)
 
     initOperations();
     initOperationWidget();
+
+    connect(ui.comboBox, qOverload<int>(&QComboBox::currentIndexChanged),
+            ui.operationStack, &QStackedWidget::setCurrentIndex);
 }
 
 void DynamicDialog::initOperations() {
@@ -24,17 +28,29 @@ void DynamicDialog::initOperations() {
 }
 
 void DynamicDialog::initOperationWidget() {
+    const QModelIndex operationIndex =
+        m_model.index(0, static_cast<int>(Widgets::OperationSelection));
     const QModelIndex operationDataIndex =
         m_model.index(0, static_cast<int>(Widgets::OperationData));
-    auto *widget = operationDataIndex
-                       .data(static_cast<int>(Roles::WidgetRole))
-                       .value<QWidget *>();
-    if (!widget) {
+
+    const auto operations =
+        operationIndex.data(static_cast<int>(Roles::ListRole)).toStringList();
+    const auto widgetValues =
+        operationDataIndex.data(static_cast<int>(Roles::ListRole)).toList();
+    if (operations.size() != widgetValues.size()) {
         return;
     }
 
-    ui.operationStack->addWidget(widget);
-    ui.operationStack->setCurrentWidget(widget);
+    for (const auto &widgetValue : widgetValues) {
+        auto *widget = widgetValue.value<QWidget *>();
+        if (!widget) {
+            return;
+        }
+
+        ui.operationStack->addWidget(widget);
+    }
+
+    ui.operationStack->setCurrentIndex(0);
 }
 
 DynamicDialog::~DynamicDialog() = default;

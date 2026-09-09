@@ -19,12 +19,15 @@ set(UI_SOURCES
     dynamic/Operations.hpp
     dynamic/widgets/Square.cpp
     dynamic/widgets/Square.hpp
+    dynamic/widgets/Sine.cpp
+    dynamic/widgets/Sine.hpp
 )
 
 set(UI_FILES
     ui/MainWindow.ui
     dynamic/DynamicDialog.ui
     dynamic/widgets/Square.ui
+    dynamic/widgets/Sine.ui
 )
 
 add_executable(${PROJECT_NAME}
