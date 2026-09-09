@@ -9,7 +9,7 @@ DynamicDialogPersistor::DynamicDialogPersistor(IDynamicDialogDataProvider &dataP
 
 void DynamicDialogPersistor::load()
 {
-    const QStringList operations = { "Add", "Square", "Multiply", "Divide" };
+    const QStringList operations = { "Sine", "Square", "Multiply", "Divide" };
     const auto data = m_dataProvider.getData();
     QVariantList widgets;
     widgets.append(QVariant::fromValue<QWidget *>(new Sine));
