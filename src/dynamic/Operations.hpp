@@ -2,19 +2,19 @@
 
 #include <QString>
 
-enum class Operation {
+enum class OperationType {
     All,
     Square,
     Sine
 };
 
-inline QString toString(const Operation operation) {
+inline QString toString(const OperationType operation) {
     switch (operation) {
-    case Operation::All:
+    case OperationType::All:
         return "All";
-    case Operation::Square:
+    case OperationType::Square:
         return "Square";
-    case Operation::Sine:
+    case OperationType::Sine:
         return "Sine";
     }
 

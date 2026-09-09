@@ -16,11 +16,15 @@ set(UI_SOURCES
     dynamic/DynamicDialogPersistor.cpp
     dynamic/DynamicDialogPersistor.hpp
     dynamic/IDynamicDialogDataProvider.hpp
+    dynamic/Operation.hpp
     dynamic/Operations.hpp
     dynamic/widgets/Square.cpp
     dynamic/widgets/Square.hpp
     dynamic/widgets/Sine.cpp
     dynamic/widgets/Sine.hpp
+    dynamic/widgets/DataProvider.hpp
+    dynamic/widgets/IAbstractPersistor.hpp
+    dynamic/widgets/SinePersistor.hpp
 )
 
 set(UI_FILES
