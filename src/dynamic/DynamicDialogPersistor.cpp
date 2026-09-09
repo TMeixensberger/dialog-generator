@@ -1,6 +1,8 @@
 #include "DynamicDialogPersistor.hpp"
 #include "DynamicDialog.hpp"
 
+#include <QDebug>
+
 DynamicDialogPersistor::DynamicDialogPersistor(
     IDynamicDialogDataProvider &dataProvider,
     QList<Operation> operations)
@@ -27,8 +29,28 @@ void DynamicDialogPersistor::load()
 }
 
 void DynamicDialogPersistor::store() {
-    int i = 0;
-    std::ignore = i;
+    if (!m_model) {
+        qWarning() << "Cannot store dynamic dialog data without a model.";
+        return;
+    }
+
+    const QString operationName =
+        index(DynamicDialog::Widgets::OperationSelection).data(Qt::DisplayRole).toString();
+    for (const auto &operation : m_operations) {
+        if (operation.name != operationName) {
+            continue;
+        }
+
+        if (!operation.persistor) {
+            qWarning() << "No persistor configured for operation:" << operationName;
+            return;
+        }
+
+        operation.persistor->store();
+        return;
+    }
+
+    qWarning() << "No operation found for name:" << operationName;
 }
 
 void DynamicDialogPersistor::setModel(QAbstractItemModel& model) 

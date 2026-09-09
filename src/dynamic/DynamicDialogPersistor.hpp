@@ -18,5 +18,5 @@ private:
 
     IDynamicDialogDataProvider &m_dataProvider;
     QList<Operation> m_operations;
-    QAbstractItemModel* m_model;
+    QAbstractItemModel *m_model = nullptr;
 };
