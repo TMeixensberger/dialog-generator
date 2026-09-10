@@ -60,7 +60,6 @@ void DynamicDialogPersistor::store() {
 
         auto dataIndex = m_model->index(0, static_cast<int>(DynamicDialog::Widgets::OperationData));
         m_model->setData(dataIndex, QVariant::fromValue(operationData), static_cast<int>(Qt::DisplayRole));
-        // TODO
         return;
     }
 

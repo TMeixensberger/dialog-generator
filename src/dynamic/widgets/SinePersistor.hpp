@@ -15,7 +15,7 @@ public:
     void load() override {}
     void store() override {}
 
-    void setModel(QAbstractItemModel &model) {
+    void setModel(QAbstractItemModel &model) override {
         m_model = &model;
     }
 
@@ -25,5 +25,5 @@ public:
 
 private:
     std::shared_ptr<DataProvider> m_dataProvider;
-    QAbstractItemModel *m_model;
+    QAbstractItemModel *m_model = nullptr;
 };
