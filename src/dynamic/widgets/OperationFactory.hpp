@@ -5,6 +5,7 @@
 #include "IModelWidget.hpp"
 #include "../Operation.hpp"
 
+#include <QStandardItemModel>
 #include <QString>
 #include <memory>
 #include <type_traits>
@@ -17,9 +18,13 @@ public:
         static_assert(std::is_base_of_v<IAbstractPersistor, TPersistor>,
                       "TPersistor must implement IAbstractPersistor");
 
-        return Operation(
-            widget,
-            std::move(name),
-            std::make_shared<TPersistor>(std::make_shared<DataProvider>()));
+        auto model = new QStandardItemModel(widget);
+        auto persistor =
+            std::make_shared<TPersistor>(std::make_shared<DataProvider>());
+
+        widget->setModel(*model);
+        persistor->setModel(*model);
+
+        return Operation(widget, std::move(name), std::move(persistor));
     }
 };

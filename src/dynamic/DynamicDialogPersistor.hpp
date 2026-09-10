@@ -13,6 +13,7 @@ public:
     void load();
     void store();
     void setModel(QAbstractItemModel& model);
+    QAbstractItemModel& model() const;
 private:
     QModelIndex index(DynamicDialog::Widgets widget) const;
 

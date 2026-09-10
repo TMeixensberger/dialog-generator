@@ -8,7 +8,7 @@
             "name": "Launch",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceRoot}/build/Debug/src/ui/dialog-generator",
+            "program": "${workspaceRoot}/build/Debug/src/dialog-generator",
             "args": [],
             "cwd": "${workspaceRoot}"
         }

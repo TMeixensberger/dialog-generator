@@ -72,6 +72,11 @@ void DynamicDialogPersistor::setModel(QAbstractItemModel& model)
 
 }
 
+QAbstractItemModel& DynamicDialogPersistor::model() const
+{
+    return *m_model;
+}
+
 QModelIndex DynamicDialogPersistor::index(DynamicDialog::Widgets widget) const 
 {
     return m_model->index(0, static_cast<int>(widget));
