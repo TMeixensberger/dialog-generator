@@ -9,6 +9,7 @@ DynamicDialog::DynamicDialog(QAbstractItemModel& model, QWidget *parent)
     ui.setupUi(this);
 
     m_mapper.setModel(&m_model);
+    m_mapper.addMapping(ui.lineEditSignal, static_cast<int>(DynamicDialog::Widgets::SignalName));
     m_mapper.addMapping(ui.comboBox, static_cast<int>(DynamicDialog::Widgets::OperationSelection));
     m_mapper.toFirst();
 
@@ -21,6 +22,13 @@ DynamicDialog::DynamicDialog(QAbstractItemModel& model, QWidget *parent)
                 m_model.setData(
                     m_model.index(0, static_cast<int>(Widgets::OperationSelection)),
                     ui.comboBox->currentText(),
+                    Qt::DisplayRole);
+            });
+    connect(ui.lineEditSignal, &QLineEdit::textChanged,
+            this, [this](const QString &text) {
+                m_model.setData(
+                    m_model.index(0, static_cast<int>(Widgets::SignalName)),
+                    text,
                     Qt::DisplayRole);
             });
 }

@@ -10,6 +10,7 @@ public:
 
     enum class Widgets : int
     {
+        SignalName,
         OperationSelection,
         OperationData,
         Count

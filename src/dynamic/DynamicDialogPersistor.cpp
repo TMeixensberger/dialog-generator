@@ -28,6 +28,9 @@ void DynamicDialogPersistor::load()
         operation.persistor->dataProvider().setData(data.operationData);
         operation.persistor->load();
     }
+    m_model->setData(index(DynamicDialog::Widgets::SignalName),
+                     data.name,
+                     static_cast<int>(Qt::DisplayRole));
     m_model->setData(index(DynamicDialog::Widgets::OperationSelection), QVariant::fromValue(data.operation), static_cast<int>(Qt::DisplayRole));
     m_model->setData(index(DynamicDialog::Widgets::OperationSelection), QVariant::fromValue(operationNames), static_cast<int>(DynamicDialog::Roles::ListRole));
     m_model->setData(index(DynamicDialog::Widgets::OperationData),
