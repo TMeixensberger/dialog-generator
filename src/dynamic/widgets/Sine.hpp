@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QWidget>
 #include <QString>
 
+#include "IModelWidget.hpp"
 #include "ui_Sine.h"
 
 struct SineData {
@@ -10,10 +10,13 @@ struct SineData {
     QString rightOperand;
 };
 
-class Sine final : public QWidget {
+class Sine final : public IModelWidget {
 public:
     explicit Sine(QWidget *parent = nullptr);
 
+    void setModel(QAbstractItemModel &model) override;
+
 private:
     Ui::Sine ui;
+    QAbstractItemModel *m_model = nullptr;
 };

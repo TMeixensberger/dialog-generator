@@ -22,6 +22,7 @@ set(UI_SOURCES
     dynamic/widgets/Square.hpp
     dynamic/widgets/Sine.cpp
     dynamic/widgets/Sine.hpp
+    dynamic/widgets/IModelWidget.hpp
     dynamic/widgets/DataProvider.hpp
     dynamic/widgets/IAbstractPersistor.hpp
     dynamic/widgets/SinePersistor.hpp
