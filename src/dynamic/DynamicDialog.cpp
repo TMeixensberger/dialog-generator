@@ -16,7 +16,13 @@ DynamicDialog::DynamicDialog(QAbstractItemModel& model, QWidget *parent)
     initOperationWidget();
 
     connect(ui.comboBox, qOverload<int>(&QComboBox::currentIndexChanged),
-            ui.operationStack, &QStackedWidget::setCurrentIndex);
+            this, [this](int index) {
+                ui.operationStack->setCurrentIndex(index);
+                m_model.setData(
+                    m_model.index(0, static_cast<int>(Widgets::OperationSelection)),
+                    ui.comboBox->currentText(),
+                    Qt::DisplayRole);
+            });
 }
 
 void DynamicDialog::initOperations() {
@@ -25,6 +31,11 @@ void DynamicDialog::initOperations() {
         m_mapper.mappedWidgetAt(static_cast<int>(Widgets::OperationSelection)));
     Q_ASSERT(operationSelection);
     operationSelection->addItems(operationIndex.data(static_cast<int>(Roles::ListRole)).toStringList());
+
+    const int currentIndex = operationSelection->findText(operationIndex.data(Qt::DisplayRole).toString());
+    if (currentIndex >= 0) {
+        operationSelection->setCurrentIndex(currentIndex);
+    }
 }
 
 void DynamicDialog::initOperationWidget() {
