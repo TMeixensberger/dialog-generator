@@ -20,6 +20,14 @@ void DynamicDialogPersistor::load()
         widgets.append(QVariant::fromValue(operation.widget));
     }
 
+    for (const auto &operation : m_operations)
+    {
+        if (operation.name != data.operation) {
+            continue;
+        }
+        operation.persistor->dataProvider().setData(data.operationData);
+        operation.persistor->load();
+    }
     m_model->setData(index(DynamicDialog::Widgets::OperationSelection), QVariant::fromValue(data.operation), static_cast<int>(Qt::DisplayRole));
     m_model->setData(index(DynamicDialog::Widgets::OperationSelection), QVariant::fromValue(operationNames), static_cast<int>(DynamicDialog::Roles::ListRole));
     m_model->setData(index(DynamicDialog::Widgets::OperationData),
@@ -47,6 +55,12 @@ void DynamicDialogPersistor::store() {
         }
 
         operation.persistor->store();
+
+        auto operationData = operation.persistor->dataProvider().getData();
+
+        auto dataIndex = m_model->index(0, static_cast<int>(DynamicDialog::Widgets::OperationData));
+        m_model->setData(dataIndex, QVariant::fromValue(operationData), static_cast<int>(Qt::DisplayRole));
+        // TODO
         return;
     }
 
