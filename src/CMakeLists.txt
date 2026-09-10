@@ -26,6 +26,7 @@ set(UI_SOURCES
     dynamic/widgets/DataProvider.hpp
     dynamic/widgets/IAbstractPersistor.hpp
     dynamic/widgets/SinePersistor.hpp
+    dynamic/widgets/OperationFactory.hpp
 )
 
 set(UI_FILES

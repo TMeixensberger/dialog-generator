@@ -3,6 +3,7 @@
 #include "widgets/Sine.hpp"
 #include "widgets/SinePersistor.hpp"
 #include "widgets/Square.hpp"
+#include "widgets/OperationFactory.hpp"
 #include <qstandarditemmodel.h>
 #include <memory>
 
@@ -11,8 +12,8 @@ DDFactory::DDFactory(IDynamicDialogDataProvider &dataProvider)
           std::make_shared<DynamicDialogPersistor>(
               dataProvider,
               QList<Operation>{
-                  Operation(new Sine, "Sine", std::make_shared<SinePersistor>(std::make_shared<DataProvider>())),
-                  Operation(new Square, "Square", std::make_shared<SinePersistor>(std::make_shared<DataProvider>())),
+                  OperationFactory{}.create<SinePersistor>(new Sine, "Sine"),
+                  OperationFactory{}.create<SinePersistor>(new Square, "Square"),
               })) {}
 
 DDFactory::~DDFactory() = default;
