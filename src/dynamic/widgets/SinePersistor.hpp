@@ -30,8 +30,8 @@ public:
         SineData sineData;
         sineData.minValue = m_model->data(index(Sine::Widgets::minValue));
         sineData.maxValue = m_model->data(index(Sine::Widgets::maxValue));
-        sineData.comment = m_model->data(index(Sine::Widgets::comment));
-        sineData.active = m_model->data(index(Sine::Widgets::active));
+        sineData.comment = m_model->data(index(Sine::Widgets::comment)).toString();
+        sineData.active = m_model->data(index(Sine::Widgets::active)).toBool();
 
         m_dataProvider->setData(QVariant::fromValue(sineData));
     }

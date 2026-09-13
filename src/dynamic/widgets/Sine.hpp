@@ -10,8 +10,8 @@
 struct SineData {
     QVariant minValue;
     QVariant maxValue;
-    QVariant comment;
-    QVariant active;
+    QString comment;
+    bool active;
 };
 Q_DECLARE_METATYPE(SineData)
 
