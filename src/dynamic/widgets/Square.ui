@@ -21,12 +21,6 @@
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QLineEdit" name="lineEdit"/>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="lineEdit_2"/>
-   </item>
   </layout>
  </widget>
  <resources/>

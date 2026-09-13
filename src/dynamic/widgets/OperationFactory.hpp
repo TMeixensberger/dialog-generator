@@ -18,7 +18,7 @@ public:
         static_assert(std::is_base_of_v<IAbstractPersistor, TPersistor>,
                       "TPersistor must implement IAbstractPersistor");
 
-        auto model = new QStandardItemModel(widget);
+        auto model = new QStandardItemModel(1, widget->columnCount(), widget);
         auto persistor =
             std::make_shared<TPersistor>(std::make_shared<DataProvider>());
 

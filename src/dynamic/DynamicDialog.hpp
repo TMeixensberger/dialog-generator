@@ -8,7 +8,7 @@
 class DynamicDialog : public QDialog {
 public:
 
-    enum class Widgets : int
+    enum Widgets : int
     {
         SignalName,
         OperationSelection,
@@ -16,7 +16,7 @@ public:
         Count
     };
 
-    enum class Roles : int
+    enum Roles : int
     {
         ListRole = Qt::UserRole + 1,
         WidgetRole,

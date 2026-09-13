@@ -1,4 +1,5 @@
 #include "DynamicDialog.hpp"
+#include "widgets/IModelWidget.hpp"
 
 #include <QComboBox>
 #include <QVariantList>
@@ -61,11 +62,12 @@ void DynamicDialog::initOperationWidget() {
     }
 
     for (const auto &widgetValue : widgetValues) {
-        auto *widget = widgetValue.value<QWidget *>();
+        auto *widget = widgetValue.value<IModelWidget *>();
         if (!widget) {
             return;
         }
 
+        widget->init();
         ui.operationStack->addWidget(widget);
     }
 

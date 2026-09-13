@@ -4,7 +4,7 @@
 #include "dynamic/DDFactory.hpp"
 #include "dynamic/DynamicDialog.hpp"
 #include "dynamic/DDDataProvider.hpp"
-
+#include "dynamic/widgets/Sine.hpp"
 #include <QTableView>
 
 int main(int argc, char **argv) {
@@ -13,7 +13,14 @@ int main(int argc, char **argv) {
     DDDataProvider::Data data;
     data.name = "Test";
     data.no = "123";
-    data.operation = "Add";
+    data.operation = "Sine";
+    
+    SineData sineData;
+    sineData.minValue = 3;
+    sineData.maxValue = 100.00;
+    sineData.comment = QString::fromUtf8("This is a comment");
+    sineData.active = true;
+    data.operationData = QVariant::fromValue(sineData);
 
     dataProv.setData(data);
     DDFactory factory(dataProv);

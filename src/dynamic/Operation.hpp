@@ -2,14 +2,14 @@
 
 #include "widgets/DataProvider.hpp"
 #include "widgets/IAbstractPersistor.hpp"
+#include "widgets/IModelWidget.hpp"
 #include <QString>
-#include <QWidget>
 #include <memory>
 #include <utility>
 
 class Operation {
 public:
-    Operation(QWidget *widget,
+    Operation(IModelWidget *widget,
               QString name,
               std::shared_ptr<IAbstractPersistor> persistor = nullptr)
         : widget(widget),
@@ -17,7 +17,7 @@ public:
           persistor(std::move(persistor)) {
     }
 
-    QWidget *widget;
+    IModelWidget *widget;
     QString name;
     std::shared_ptr<IAbstractPersistor> persistor;
 };

@@ -7,8 +7,16 @@ class Square final : public IModelWidget {
 public:
     explicit Square(QWidget *parent = nullptr);
 
-    void setModel(QAbstractItemModel &model) override;
+    enum Widgets : int
+    {
+        topLeft,
+        bottomRight,
+        Count
+    };
 
+    void setModel(QAbstractItemModel &model) override;
+    [[nodiscard]] int columnCount() const override;
+    void init() override;
 private:
     Ui::Square ui;
     QAbstractItemModel *m_model = nullptr;

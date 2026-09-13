@@ -10,3 +10,11 @@ Square::Square(QWidget *parent)
 void Square::setModel(QAbstractItemModel &model) {
     m_model = &model;
 }
+
+void Square::init() {
+}
+
+int Square::columnCount() const
+{
+    return static_cast<int>(Widgets::Count);
+}

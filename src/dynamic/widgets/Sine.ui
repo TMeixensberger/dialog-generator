@@ -21,12 +21,6 @@
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QLineEdit" name="leftOperand"/>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="rightOperand"/>
-   </item>
   </layout>
  </widget>
  <resources/>
