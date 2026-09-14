@@ -20,16 +20,30 @@ public:
         }
         const auto sineData = data.value<SineData>();
 
-        m_model->setData(index(Sine::Widgets::minValue), sineData.minValue);
-        m_model->setData(index(Sine::Widgets::maxValue), sineData.maxValue);
-        m_model->setData(index(Sine::Widgets::comment), sineData.comment);
-        m_model->setData(index(Sine::Widgets::active), sineData.active);
+        m_model->setData(
+            index(Sine::Widgets::minValue),
+            QVariant::fromValue(sineData.minValue),
+            Qt::DisplayRole);
+        m_model->setData(
+            index(Sine::Widgets::maxValue),
+            QVariant::fromValue(sineData.maxValue),
+            Qt::DisplayRole);
+        m_model->setData(
+            index(Sine::Widgets::comment),
+            sineData.comment,
+            Qt::DisplayRole);
+        m_model->setData(
+            index(Sine::Widgets::active),
+            sineData.active,
+            Qt::DisplayRole);
     }
     void store() override
     {
         SineData sineData;
-        sineData.minValue = m_model->data(index(Sine::Widgets::minValue));
-        sineData.maxValue = m_model->data(index(Sine::Widgets::maxValue));
+        sineData.minValue = m_model->data(
+            index(Sine::Widgets::minValue)).value<SineNumericValue>();
+        sineData.maxValue = m_model->data(
+            index(Sine::Widgets::maxValue)).value<SineNumericValue>();
         sineData.comment = m_model->data(index(Sine::Widgets::comment)).toString();
         sineData.active = m_model->data(index(Sine::Widgets::active)).toBool();
 

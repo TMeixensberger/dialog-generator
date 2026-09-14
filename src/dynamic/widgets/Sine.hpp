@@ -3,13 +3,18 @@
 #include <QVariant>
 #include <QDataWidgetMapper>
 #include <QAbstractItemModel>
+#include <QHash>
+#include <variant>
 
 #include "IModelWidget.hpp"
 #include "ui_Sine.h"
 
+using SineNumericValue = std::variant<int, double>;
+Q_DECLARE_METATYPE(SineNumericValue)
+
 struct SineData {
-    QVariant minValue;
-    QVariant maxValue;
+    SineNumericValue minValue;
+    SineNumericValue maxValue;
     QString comment;
     bool active;
 };
@@ -42,4 +47,5 @@ private:
     Ui::Sine ui;
     QAbstractItemModel *m_model = nullptr;
     QDataWidgetMapper *m_mapper = nullptr;
+    QHash<Widgets, int> m_widgetTypes;
 };
